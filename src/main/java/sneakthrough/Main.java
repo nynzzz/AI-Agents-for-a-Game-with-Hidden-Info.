@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class App extends Application {
+public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
