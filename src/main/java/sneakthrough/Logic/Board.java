@@ -39,10 +39,17 @@ public class Board {
         for (int i = 0; i < size; i++) {
             for(int j = 0; j < size; j++){
                 if(grid[i][j] == null){
-                    System.out.print("0");
+                    System.out.print("0"+ "  ");
                 }
                 else{
-                    System.out.print("1");
+                    // if piece is white
+                    if(grid[i][j].getColor().equals("white")){
+                        System.out.print("w"+ "  ");
+                    }
+                    // if piece is black
+                    else{
+                        System.out.print("b"+ "  ");
+                    }
                 }
             }
             System.out.println();
