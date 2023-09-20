@@ -31,6 +31,12 @@ public class Game {
                 turn = true;
             }
         }
+
+        if (isWhiteWinner()) {
+            System.out.println("Game Over - White Wins!");
+        } else if (isBlackWinner()) {
+            System.out.println("Game Over - Black Wins!");
+        }
     }
 
     public Board getBoard() {
@@ -45,40 +51,58 @@ public class Game {
         return player2;
     }
 
-    // stopping criteria for the game
+    // STOPPING CRITERIA
     // game ends when one of the players arrives at the other side of the board or when one of the players has no pieces left
     public boolean isGameOver() {
+        boolean whiteWins = isWhiteWinner();
+        boolean blackWins = isBlackWinner();
+
+        // either player reached the other side or has no pieces left
+        return whiteWins || blackWins;
+    }
+
+    // check if white has won
+    private boolean isWhiteWinner() {
+        int blackPiecesLeft = 0;
         Piece[][] grid = board.getGrid();
-        boolean white = false;
-        boolean black = false;
-        // check if one of the players arrived at the other side of the board
+        // check if white has reached the other side
         for (int i = 0; i < grid.length; i++) {
             if (grid[0][i] != null && grid[0][i].getColor().equals("white")) {
-                white = true;
-            }
-            if (grid[grid.length - 1][i] != null && grid[grid.length - 1][i].getColor().equals("black")) {
-                black = true;
+                return true;
             }
         }
-        // check if one of the players has no pieces left
-        int whitePieces = 0;
-        int blackPieces = 0;
+        // check if black has no pieces left
         for (int i = 0; i < grid.length; i++) {
-            for(int j = 0; j < grid.length; j++){
-                if(grid[i][j] != null){
-                    if(grid[i][j].getColor().equals("white")){
-                        whitePieces++;
-                    }
-                    else{
-                        blackPieces++;
-                    }
+            for (int j = 0; j < grid.length ; j++) {
+                if (grid[i][j] != null && grid[i][j].getColor().equals("black")) {
+                    blackPiecesLeft++;
                 }
             }
         }
-        if(whitePieces == 0 || blackPieces == 0){
-            return true;
+        System.out.println("black pieces left: " + blackPiecesLeft);
+        return blackPiecesLeft == 0;
+    }
+
+    // check if black has won
+    private boolean isBlackWinner() {
+        int whitePiecesLeft = 0;
+        Piece[][] grid = board.getGrid();
+        // check if black has reached the other side
+        for (int i = 0; i < grid.length; i++) {
+            if (grid[grid.length - 1][i] != null && grid[grid.length - 1][i].getColor().equals("black")) {
+                return true;
+            }
         }
-        return false;
+        // check if white has no pieces left
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length ; j++) {
+                if (grid[i][j] != null && grid[i][j].getColor().equals("white")) {
+                    whitePiecesLeft++;
+                }
+            }
+        }
+        System.out.println("white pieces left: " + whitePiecesLeft);
+        return whitePiecesLeft == 0;
     }
 
 
