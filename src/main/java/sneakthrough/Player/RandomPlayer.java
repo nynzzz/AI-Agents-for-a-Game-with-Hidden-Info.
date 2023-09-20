@@ -5,71 +5,66 @@ import sneakthrough.Logic.Piece;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Scanner;
 
-public class HumanPlayer implements Player{
+public class RandomPlayer implements Player{
 
     private String color;
 
-    public HumanPlayer(String color) {
+    public RandomPlayer(String color){
         this.color = color;
     }
 
-    public String getColor() {
+    public String getColor(){
         return this.color;
     }
 
     @Override
     public void makeMove(Board board) {
-        // ask the human player to select a piece to move
-        Piece piece = selectPiece(board);
-        if(piece == null){
-            // ask the human player to select a move
-            System.out.println("There is no piece at this (i,j) !!!");
-            piece = selectPiece(board);
+        // get all pieces of the player color
+        String playerColor = this.color;
+        ArrayList<Piece> pieces = getPlayerPieces(board, playerColor);
+        // get a random piece from the pieces
+        Piece piece = getRandomPiece(pieces);
+        // check if the piece has valid moves
+        ArrayList<int[]> validMoves = getValidMoves(board, piece);
+        // if valid moves is empty, choose another piece
+        while(validMoves.isEmpty()){
+            piece = getRandomPiece(pieces);
+            validMoves = getValidMoves(board, piece);
         }
-        // ask the human player to select a move
-        int[] move = selectMove();
-
-        // check if move is valid
-        if(isValidMove(board, piece, move)){
-            // check if move is a capture
-            if(isCaptureMove(board, piece, move)){
-                System.out.println("Its a capture move");
-                Piece capturedPiece = board.getGrid()[move[0]][move[1]];
-                // remove captured piece
-                board.removeCapturedPiece(capturedPiece);
-                // move piece
-                board.getGrid()[move[0]][move[1]] = piece;
-                // remove piece from old position
-                board.getGrid()[piece.getPosition()[0]][piece.getPosition()[1]] = null;
-                // update piece position
-                piece.setPosition(move);
-                // reveal capturing piece to the opponent
-                piece.setStatus(true);
-            }
-            // check if move is a reveal move
-            else if(isRevealMove(board, piece, move)){
-                System.out.println("Its a reveal move");
-                // reveal piece of the opponent
-                board.getGrid()[move[0]][move[1]].setStatus(true);
-                //stay at the same position
-            }
-            // the move is neither a capture or a reveal move
-            else{
-                System.out.println("Its a normal move");
-                // move piece
-                board.getGrid()[move[0]][move[1]] = piece;
-                // remove piece from old position
-                board.getGrid()[piece.getPosition()[0]][piece.getPosition()[1]] = null;
-                // update piece position
-                piece.setPosition(move);
-            }
+        // get a random move from the valid moves
+        int[] move = getRandomMove(validMoves);
+        // check if move is a capture
+        if(isCaptureMove(board, piece, move)){
+            System.out.println("Its a capture move");
+            Piece capturedPiece = board.getGrid()[move[0]][move[1]];
+            // remove captured piece
+            board.removeCapturedPiece(capturedPiece);
+            // move piece
+            board.getGrid()[move[0]][move[1]] = piece;
+            // remove piece from old position
+            board.getGrid()[piece.getPosition()[0]][piece.getPosition()[1]] = null;
+            // update piece position
+            piece.setPosition(move);
+            // reveal capturing piece to the opponent
+            piece.setStatus(true);
         }
+        // check if move is a reveal move
+        else if(isRevealMove(board, piece, move)){
+            System.out.println("Its a reveal move");
+            // reveal piece of the opponent
+            board.getGrid()[move[0]][move[1]].setStatus(true);
+            //stay at the same position
+        }
+        // the move is neither a capture or a reveal move
         else{
-            // ask the human player to select a move
-            System.out.println("This move is not valid !!!");
-            makeMove(board);
+            System.out.println("Its a normal move");
+            // move piece
+            board.getGrid()[move[0]][move[1]] = piece;
+            // remove piece from old position
+            board.getGrid()[piece.getPosition()[0]][piece.getPosition()[1]] = null;
+            // update piece position
+            piece.setPosition(move);
         }
     }
 
@@ -146,17 +141,31 @@ public class HumanPlayer implements Player{
         return validMoves;
     }
 
-    public boolean isValidMove(Board board, Piece piece, int[] move){
-        ArrayList<int[]> validMoves = getValidMoves(board, piece);
-        for(int[] validMove : validMoves){
-            if(validMove[0] == move[0] && validMove[1] == move[1]){
-                return true;
+   // get pieces of the player color
+    public ArrayList<Piece> getPlayerPieces(Board board, String color){
+        ArrayList<Piece> playerPieces = new ArrayList<Piece>();
+        for(int i = 0; i < board.getSize(); i++){
+            for(int j = 0; j < board.getSize(); j++){
+                if(board.getGrid()[i][j] != null && board.getGrid()[i][j].getColor().equals(color)){
+                    playerPieces.add(board.getGrid()[i][j]);
+                }
             }
         }
-        return false;
+        return playerPieces;
     }
 
-    // pieces can capture opponent pieces by moving diagonally to the left or right. When a capture is made, the capturing piece is revealed to the opponent.
+    // get a random piece to move
+    public Piece getRandomPiece(ArrayList<Piece> pieces){
+        int randomIndex = (int) (Math.random() * pieces.size());
+        return pieces.get(randomIndex);
+    }
+
+    // get a random move from the valid moves
+    public int[] getRandomMove(ArrayList<int[]> validMoves){
+        int randomIndex = (int) (Math.random() * validMoves.size());
+        return validMoves.get(randomIndex);
+    }
+
     // method to check if a move is a capture
     public boolean isCaptureMove(Board board, Piece piece, int[] move){
         ArrayList<int[]> validMoves = getValidMoves(board, piece);
@@ -203,9 +212,6 @@ public class HumanPlayer implements Player{
         return false;
     }
 
-    //If an orthogonal move is attempted to a spot with a hidden piece of the opponent,
-    // the move is not completed and the enemy piece is revealed
-
     // method to check if a move is an orthogonal move to a hidden piece
     public boolean isRevealMove(Board board, Piece piece, int[] move){
         ArrayList<int[]> validMoves = getValidMoves(board, piece);
@@ -245,30 +251,4 @@ public class HumanPlayer implements Player{
         }
         return false;
     }
-
-    //TODO: change with a method in UI
-    // method that would ask a player to input the coordinates (i,j) of the piece they want to move
-    public Piece selectPiece(Board board){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the coordinates of the piece you want to move (i,j): ");
-        String input = scanner.nextLine();
-        String[] coordinates = input.split(",");
-        int i = Integer.parseInt(coordinates[0]);
-        int j = Integer.parseInt(coordinates[1]);
-        return board.getGrid()[i][j];
-    }
-
-    //TODO: change with a method in UI
-    // method that would ask a player to input the coordinates (i,j) of the move they want to make
-    public int[] selectMove(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the coordinates of the move you want to make (i,j): ");
-        String input = scanner.nextLine();
-        String[] coordinates = input.split(",");
-        int i = Integer.parseInt(coordinates[0]);
-        int j = Integer.parseInt(coordinates[1]);
-        int[] move = {i, j};
-        return move;
-    }
-
 }
