@@ -10,8 +10,8 @@ public class Game {
     private Player player2;
     private boolean turn;
 
-    public Game(Player player1, Player player2) {
-        this.board = new Board();
+    public Game(Board board, Player player1, Player player2) {
+        this.board = board;
         this.player1 = player1;
         this.player2 = player2;
         this.turn = true;
@@ -108,9 +108,10 @@ public class Game {
 
     // main method to play the game in console
     public static void main(String[] args) {
+        Board board = new Board();
         Player player1 = new RandomPlayer("white");
         Player player2 = new RandomPlayer("black");
-        Game game = new Game(player1, player2);
+        Game game = new Game(board,player1, player2);
         game.startGame();
     }
 }
