@@ -123,28 +123,26 @@ public class MainScreen extends Application {
         groupNumber.setLayoutX(screenWidth / 2 - 100);
         groupNumber.setLayoutY(screenHeight/6 + 100);
 
-        Label white = new Label("White player");
-        Label black = new Label("Black player");
+        Label whitePlayerLabel = new Label("White player");
+        whitePlayerLabel.setLayoutX(screenWidth / 2 - 250);
+        whitePlayerLabel.setLayoutY(screenHeight/2 - 30);
+        whitePlayerLabel.setTextAlignment(TextAlignment.CENTER);
+        whitePlayerLabel.setFont(Font.font("Helvetica Neue", FontWeight.NORMAL, 15));
 
-        white.setLayoutX(screenWidth / 2 - 250);
-        white.setLayoutY(screenHeight/2 - 30);
+        Label blackPlayerLabel = new Label("Black player");
+        blackPlayerLabel.setLayoutX(screenWidth/2 + 50);
+        blackPlayerLabel.setLayoutY(screenHeight/2 - 30);
+        blackPlayerLabel.setTextAlignment(TextAlignment.CENTER);
+        blackPlayerLabel.setFont(Font.font("Helvetica Neue", FontWeight.NORMAL, 15));
 
-        black.setLayoutX(screenWidth/2 + 50);
-        black.setLayoutY(screenHeight/2 - 30);
-
-
-        //buttons for main menu
 
         ObservableList<String> playerOptions =
-                FXCollections.observableArrayList(
-                        "Human",
-                        "Random Bot"
-                );
+                FXCollections.observableArrayList("Human", "Random Bot");
 
-        ComboBox whitePlayer = new ComboBox(playerOptions);
-        whitePlayer.setPrefWidth(200);
-        whitePlayer.setLayoutX(screenWidth/2 - 250);
-        whitePlayer.setLayoutY(screenHeight/2);
+        ComboBox whitePlayerCB = new ComboBox(playerOptions);
+        whitePlayerCB.setPrefWidth(200);
+        whitePlayerCB.setLayoutX(screenWidth/2 - 250);
+        whitePlayerCB.setLayoutY(screenHeight/2);
 //        whitePlayer.setOnAction(e ->
 //        {
 //            HumanPlayer player1 = new HumanPlayer("white");
@@ -154,10 +152,16 @@ public class MainScreen extends Application {
 //            stage.setScene(whitePlayerScene);
 //        });
 
-        ComboBox blackPlayer = new ComboBox(playerOptions);
-        blackPlayer.setPrefWidth(200);
-        blackPlayer.setLayoutX(screenWidth/2 + 50);
-        blackPlayer.setLayoutY(screenHeight/2);
+        ComboBox blackPlayerCB = new ComboBox(playerOptions);
+        blackPlayerCB.setPrefWidth(200);
+        blackPlayerCB.setLayoutX(screenWidth/2 + 50);
+        blackPlayerCB.setLayoutY(screenHeight/2);
+
+        Button startGameButton = new Button("Start game");
+        startGameButton.setPrefWidth(200);
+        startGameButton.setLayoutX(screenWidth/2 - 100);
+        startGameButton.setLayoutY(screenHeight/2 + 100);
+
 //        blackplayer.setOnAction(e ->
 //        {
 //            stage.setScene(blackplayerScene);
@@ -168,7 +172,7 @@ public class MainScreen extends Application {
 //            System.out.println();
 //        });
 
-        group.getChildren().addAll(gameName,groupNumber,blackPlayer,whitePlayer,white,black) ;
+        group.getChildren().addAll(gameName,groupNumber,blackPlayerCB,whitePlayerCB,whitePlayerLabel,blackPlayerLabel, startGameButton) ;
         whitePlayerGroup.getChildren().addAll(chessboard);
 
         stage.setScene(mainMenu);
