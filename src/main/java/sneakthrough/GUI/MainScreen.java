@@ -1,10 +1,13 @@
 package sneakthrough.GUI;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -15,22 +18,29 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import sneakthrough.Logic.Board;
+import sneakthrough.Logic.Game;
+import sneakthrough.Player.HumanPlayer;
+
+//TODO
+// fill in empty spaces next to the board with e.g. history of movements or anything really useful for the user
+// use board instance for creating the board
+// use piece instance for the pawns
+
 
 public class MainScreen extends Application {
-
+    Circle pawn;
+    Board mainBoard = new Board() ;
+    Rectangle[][] chessMatrix = new Rectangle[8][8] ;
     Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-
     final double screenWidth = primaryScreenBounds.getWidth();
     final double screenHeight = primaryScreenBounds.getHeight();
-    final int boardSize = 8;
+    int boardSize = mainBoard.getSize() ;
 
     @Override
     public void start(Stage stage) throws Exception{
 
         stage.setTitle("Sneakthrough game - Group 6");
-
-
-
         Group group = new Group();
 
         Scene mainMenu = new Scene(group, screenWidth, screenHeight, true);
@@ -39,13 +49,13 @@ public class MainScreen extends Application {
 
         //single player
         Group singleGroup = new Group();
-        Scene singlePlayerScene = new Scene(singleGroup, screenWidth, screenHeight);
-        singlePlayerScene.setFill(Color.BLACK);
+        Scene blackplayerScene = new Scene(singleGroup, screenWidth, screenHeight);
+        blackplayerScene.setFill(Color.BLACK);
 
-        //multiplayer
-        Group multiplayerGroup = new Group();
-        Scene multiPLayerScene = new Scene(multiplayerGroup, screenWidth, screenHeight);
-        multiPLayerScene.setFill(Color.LIGHTSEAGREEN);
+        //whitePlayer
+        Group whitePlayerGroup = new Group();
+        Scene whitePlayerScene = new Scene(whitePlayerGroup, screenWidth, screenHeight);
+        whitePlayerScene.setFill(Color.LIGHTSEAGREEN);
 
         GridPane chessboard = new GridPane();
         chessboard.setLayoutX(screenWidth/2 - 280);
@@ -60,22 +70,33 @@ public class MainScreen extends Application {
                 } else {
                     square.setFill(Color.BLACK);
                 }
+                chessMatrix[row][col] = square;
                 chessboard.add(square, col, row);
 
                 if (row == 1 || row == 0)
                 {
-                    Circle pawn = new Circle(20, Color.BROWN);
+                    pawn = new Circle(20, Color.BROWN);
                     pawn.setTranslateX(15);
                     chessboard.add(pawn, col , row);
                 }
 
                 if (row == 6 || row == 7)
                 {
-                    Circle pawn = new Circle(20, Color.SANDYBROWN);
+                    pawn = new Circle(20, Color.SANDYBROWN);
                     pawn.setTranslateX(15);
                     chessboard.add(pawn, col , row);
                 }
+
+                int finalRow = row;
+                int finalCol = col;
+
+                pawn.setOnMouseClicked(e ->
+                {
+                    System.out.println("Pawn clicked at row " + finalRow + ", column " + finalCol);
+                });
+
             }
+
         }
 
 
@@ -102,28 +123,53 @@ public class MainScreen extends Application {
         groupNumber.setLayoutX(screenWidth / 2 - 100);
         groupNumber.setLayoutY(screenHeight/6 + 100);
 
+        Label white = new Label("White player");
+        Label black = new Label("Black player");
+
+        white.setLayoutX(screenWidth / 2 - 250);
+        white.setLayoutY(screenHeight/2 - 30);
+
+        black.setLayoutX(screenWidth/2 + 50);
+        black.setLayoutY(screenHeight/2 - 30);
+
+
         //buttons for main menu
 
-        Button multiPlayer = new Button("Multiplayer - Human vs Human");
-        multiPlayer.setPrefWidth(200);
-        multiPlayer.setLayoutX(screenWidth/2 - 250);
-        multiPlayer.setLayoutY(screenHeight/2);
-        multiPlayer.setOnAction(e ->
-        {
-            stage.setScene(multiPLayerScene);
-        });
+        ObservableList<String> playerOptions =
+                FXCollections.observableArrayList(
+                        "Human",
+                        "Random Bot"
+                );
 
-        Button singlePlayer = new Button("Single player");
-        singlePlayer.setPrefWidth(200);
-        singlePlayer.setLayoutX(screenWidth/2 + 50);
-        singlePlayer.setLayoutY(screenHeight/2);
-        singlePlayer.setOnAction(e ->
-        {
-            stage.setScene(singlePlayerScene);
-        });
+        ComboBox whitePlayer = new ComboBox(playerOptions);
+        whitePlayer.setPrefWidth(200);
+        whitePlayer.setLayoutX(screenWidth/2 - 250);
+        whitePlayer.setLayoutY(screenHeight/2);
+//        whitePlayer.setOnAction(e ->
+//        {
+//            HumanPlayer player1 = new HumanPlayer("white");
+//            HumanPlayer player2 = new HumanPlayer("black");
+//            Game game = new Game(player1,player2);
+//            //game.startGame();
+//            stage.setScene(whitePlayerScene);
+//        });
 
-        group.getChildren().addAll(gameName,groupNumber,singlePlayer,multiPlayer) ;
-        multiplayerGroup.getChildren().addAll(chessboard);
+        ComboBox blackPlayer = new ComboBox(playerOptions);
+        blackPlayer.setPrefWidth(200);
+        blackPlayer.setLayoutX(screenWidth/2 + 50);
+        blackPlayer.setLayoutY(screenHeight/2);
+//        blackplayer.setOnAction(e ->
+//        {
+//            stage.setScene(blackplayerScene);
+//        });
+
+//        whitePlayerScene.setOnMouseClicked(e ->
+//        {
+//            System.out.println();
+//        });
+
+        group.getChildren().addAll(gameName,groupNumber,blackPlayer,whitePlayer,white,black) ;
+        whitePlayerGroup.getChildren().addAll(chessboard);
 
         stage.setScene(mainMenu);
         stage.show();
