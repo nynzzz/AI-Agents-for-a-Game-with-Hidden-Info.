@@ -21,6 +21,8 @@ import javafx.stage.Stage;
 import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Game;
 import sneakthrough.Player.HumanPlayer;
+import sneakthrough.Player.Player;
+import sneakthrough.Player.RandomPlayer;
 
 //TODO
 // fill in empty spaces next to the board with e.g. history of movements or anything really useful for the user
@@ -29,6 +31,10 @@ import sneakthrough.Player.HumanPlayer;
 
 
 public class MainScreen extends Application {
+
+    Player whitePlayer ;
+
+    Player blackPlayer ;
     Circle pawn;
     Board mainBoard = new Board() ;
     Rectangle[][] chessMatrix = new Rectangle[8][8] ;
@@ -47,15 +53,10 @@ public class MainScreen extends Application {
         mainMenu.setFill(Color.LIGHTBLUE);
         mainMenu.setRoot(group);
 
-        //single player
-        Group singleGroup = new Group();
-        Scene blackplayerScene = new Scene(singleGroup, screenWidth, screenHeight);
-        blackplayerScene.setFill(Color.BLACK);
+        Group gameGroup = new Group();
 
-        //whitePlayer
-        Group whitePlayerGroup = new Group();
-        Scene whitePlayerScene = new Scene(whitePlayerGroup, screenWidth, screenHeight);
-        whitePlayerScene.setFill(Color.LIGHTSEAGREEN);
+        Scene gameScene = new Scene(gameGroup, screenWidth, screenHeight);
+        gameScene.setFill(Color.LIGHTSEAGREEN);
 
         GridPane chessboard = new GridPane();
         chessboard.setLayoutX(screenWidth/2 - 280);
@@ -98,7 +99,6 @@ public class MainScreen extends Application {
             }
 
         }
-
 
         // labels for main menu
         Label gameName = new Label("Sneakthrough");
@@ -143,14 +143,6 @@ public class MainScreen extends Application {
         whitePlayerCB.setPrefWidth(200);
         whitePlayerCB.setLayoutX(screenWidth/2 - 250);
         whitePlayerCB.setLayoutY(screenHeight/2);
-//        whitePlayer.setOnAction(e ->
-//        {
-//            HumanPlayer player1 = new HumanPlayer("white");
-//            HumanPlayer player2 = new HumanPlayer("black");
-//            Game game = new Game(player1,player2);
-//            //game.startGame();
-//            stage.setScene(whitePlayerScene);
-//        });
 
         ComboBox blackPlayerCB = new ComboBox(playerOptions);
         blackPlayerCB.setPrefWidth(200);
@@ -162,18 +154,25 @@ public class MainScreen extends Application {
         startGameButton.setLayoutX(screenWidth/2 - 100);
         startGameButton.setLayoutY(screenHeight/2 + 100);
 
-//        blackplayer.setOnAction(e ->
-//        {
-//            stage.setScene(blackplayerScene);
-//        });
+        startGameButton.setOnAction(e ->
+        {
+            if (whitePlayerCB.getValue() == "Human") whitePlayer = new HumanPlayer("white") ;
+            else whitePlayer = new RandomPlayer("white");
 
-//        whitePlayerScene.setOnMouseClicked(e ->
-//        {
-//            System.out.println();
-//        });
+            if (blackPlayerCB.getValue() == "Human") blackPlayer = new HumanPlayer("black") ;
+            else blackPlayer = new RandomPlayer("black");
+
+            Game game = new Game(mainBoard, whitePlayer, blackPlayer);
+
+            game.startGame();
+
+            stage.setScene(gameScene);
+
+
+        });
 
         group.getChildren().addAll(gameName,groupNumber,blackPlayerCB,whitePlayerCB,whitePlayerLabel,blackPlayerLabel, startGameButton) ;
-        whitePlayerGroup.getChildren().addAll(chessboard);
+        gameGroup.getChildren().addAll(chessboard);
 
         stage.setScene(mainMenu);
         stage.show();
