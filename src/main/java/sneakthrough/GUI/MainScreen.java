@@ -171,6 +171,8 @@ public class MainScreen extends Application {
 
         });
 
+        //seiojofsfsj
+
         group.getChildren().addAll(gameName,groupNumber,blackPlayerCB,whitePlayerCB,whitePlayerLabel,blackPlayerLabel, startGameButton) ;
         gameGroup.getChildren().addAll(chessboard);
 
