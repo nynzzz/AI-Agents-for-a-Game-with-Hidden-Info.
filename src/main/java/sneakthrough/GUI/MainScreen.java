@@ -27,9 +27,7 @@ import sneakthrough.Player.RandomPlayer;
 
 //TODO
 // fill in empty spaces next to the board with e.g. history of movements or anything really useful for the user
-// use board instance for creating the board
-// use piece instance for the pawns
-
+// fix movement forward and diagonally, change turn automated
 
 public class MainScreen extends Application {
 
@@ -50,12 +48,14 @@ public class MainScreen extends Application {
 
     private Group pawnGroup = new Group();
 
-    private Parent createChessboard()
+    private Group gameGroup = new Group();
+
+    private Pane createChessboard()
     {
         Pane root = new Pane();
 
-        //root.setLayoutX(300);
-        //root.setLayoutY(300);
+        root.setLayoutX(screenWidth/2 - 350);
+        root.setLayoutY(screenHeight/2 - 350);
 
         root.setPrefSize(measure*TILE_SIZE, measure * TILE_SIZE);
         root.getChildren().addAll(tileGroup, pawnGroup) ;
@@ -223,7 +223,8 @@ public class MainScreen extends Application {
         startGameButton.setLayoutX(screenWidth/2 - 100);
         startGameButton.setLayoutY(screenHeight/2 + 100);
 
-        Scene gameScene = new Scene(createChessboard());
+        Scene gameScene = new Scene(gameGroup,screenWidth,screenHeight);
+        gameGroup.getChildren().addAll(createChessboard()) ;
 
         startGameButton.setOnAction(e ->
         {
@@ -234,13 +235,12 @@ public class MainScreen extends Application {
             else blackPlayer = new RandomPlayer("black");
 
             stage.setScene(gameScene);
-            stage.setMaximized(true);
         });
 
         mainMenuGroup.getChildren().addAll(gameName,groupNumber,blackPlayerCB,whitePlayerCB,whitePlayerLabel,blackPlayerLabel, startGameButton) ;
 
+        stage.setScene(gameScene);
         stage.setFullScreen(true);
-        stage.setScene(mainMenu);
         stage.show();
     }
 
