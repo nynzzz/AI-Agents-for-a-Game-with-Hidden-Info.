@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -47,60 +46,16 @@ public class MainScreen extends Application {
     public void start(Stage stage) throws Exception{
 
         stage.setTitle("Sneakthrough game - Group 6");
-        Group group = new Group();
+        Group mainMenuGroup = new Group();
 
-        Scene mainMenu = new Scene(group, screenWidth, screenHeight, true);
+        Scene mainMenu = new Scene(mainMenuGroup, screenWidth, screenHeight, true);
         mainMenu.setFill(Color.LIGHTBLUE);
-        mainMenu.setRoot(group);
+        mainMenu.setRoot(mainMenuGroup);
 
         Group gameGroup = new Group();
 
-        Scene gameScene = new Scene(gameGroup, screenWidth, screenHeight);
-        gameScene.setFill(Color.LIGHTSEAGREEN);
 
-        GridPane chessboard = new GridPane();
-        chessboard.setLayoutX(screenWidth/2 - 280);
-        chessboard.setLayoutY(screenHeight/2 -280);
-
-        for (int row = 0; row < boardSize; row++)
-        {
-            for (int col = 0; col < boardSize; col++) {
-                Rectangle square = new Rectangle(70, 70);
-                if ((row + col) % 2 == 0) {
-                    square.setFill(Color.WHITE);
-                } else {
-                    square.setFill(Color.BLACK);
-                }
-                chessMatrix[row][col] = square;
-                chessboard.add(square, col, row);
-
-                if (row == 1 || row == 0)
-                {
-                    pawn = new Circle(20, Color.BROWN);
-                    pawn.setTranslateX(15);
-                    chessboard.add(pawn, col , row);
-                }
-
-                if (row == 6 || row == 7)
-                {
-                    pawn = new Circle(20, Color.SANDYBROWN);
-                    pawn.setTranslateX(15);
-                    chessboard.add(pawn, col , row);
-                }
-
-                int finalRow = row;
-                int finalCol = col;
-
-                pawn.setOnMouseClicked(e ->
-                {
-                    System.out.println("Pawn clicked at row " + finalRow + ", column " + finalCol);
-                });
-
-            }
-
-        }
-
-        // labels for main menu
+        //labels for main menu
         Label gameName = new Label("Sneakthrough");
         //gameName.setPrefSize(300, 100);
         gameName.setTextAlignment(TextAlignment.CENTER);
@@ -162,23 +117,13 @@ public class MainScreen extends Application {
             if (blackPlayerCB.getValue() == "Human") blackPlayer = new HumanPlayer("black") ;
             else blackPlayer = new RandomPlayer("black");
 
-            Game game = new Game(mainBoard, whitePlayer, blackPlayer);
-
-            game.startGame();
-
-            stage.setScene(gameScene);
-
-
         });
 
-        group.getChildren().addAll(gameName,groupNumber,blackPlayerCB,whitePlayerCB,whitePlayerLabel,blackPlayerLabel, startGameButton) ;
-        gameGroup.getChildren().addAll(chessboard);
+        mainMenuGroup.getChildren().addAll(gameName,groupNumber,blackPlayerCB,whitePlayerCB,whitePlayerLabel,blackPlayerLabel, startGameButton) ;
 
         stage.setScene(mainMenu);
         stage.show();
         stage.setMaximized(true);
-        System.out.println(gameName.getPrefWidth());
-
     }
 
 }
