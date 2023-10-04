@@ -8,7 +8,7 @@ public class MoveResult {
         return type;
     }
 
-    private Pawn pawn;
+    public Pawn pawn;
 
     public Pawn getPawn() {
         return pawn;

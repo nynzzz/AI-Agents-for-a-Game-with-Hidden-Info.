@@ -50,6 +50,8 @@ public class MainScreen extends Application {
 
     private Group gameGroup = new Group();
 
+    boolean whiteMove = true;
+
     private Pane createChessboard()
     {
         Pane root = new Pane();
@@ -112,6 +114,7 @@ public class MainScreen extends Application {
             int y0 = toBoard(pawn.getOldY());
 
             switch (result.getType()) {
+
                 case NONE:
                     pawn.abortMove();
                     break;
@@ -121,13 +124,15 @@ public class MainScreen extends Application {
                     chessBoard[newX][newY].setPiece(pawn);
                     break;
                 case KILL:
+
                     pawn.move(newX, newY);
                     chessBoard[x0][y0].setPiece(null);
                     chessBoard[newX][newY].setPiece(pawn);
 
                     Pawn otherPawn = result.getPawn();
                     chessBoard[toBoard(otherPawn.getOldX())][toBoard(otherPawn.getOldY())].setPiece(null);
-                    pawn.getChildren().remove(otherPawn);
+                    pawnGroup.getChildren().remove(otherPawn);
+
                     break;
             }
         });
@@ -136,35 +141,55 @@ public class MainScreen extends Application {
     }
 
     private MoveResult tryMove(Pawn piece, int newX, int newY) {
-        if (newX < 0 || newX >= measure || newY < 0 || newY >= measure) {
-            return new MoveResult(MoveType.NONE);
-        }
 
-        if (chessBoard[newX][newY].hasPiece()) {
-            return new MoveResult(MoveType.NONE);
-        }
+        if ((piece.getColor() == PawnColor.BLACK && !whiteMove) ||
+                (piece.getColor() == PawnColor.WHITE && whiteMove)) {
 
-        int x0 = toBoard(piece.getOldX());
-        int y0 = toBoard(piece.getOldY());
 
-        int deltaX = Math.abs(newX - x0);
-        int deltaY = Math.abs(newY - y0);
+            if (piece.getColor() == PawnColor.BLACK && newY <= toBoard(piece.getOldY())) {
+                return new MoveResult(MoveType.NONE);
+            }
 
-        if ((deltaX == 1 && deltaY == 1) ||
-                (deltaX == 0 && deltaY == 1 && piece.getColor().moveDirection == 1) ||
-                (deltaX == 0 && deltaY == 1 && piece.getColor().moveDirection == -1)) {
-            return new MoveResult(MoveType.NORMAL);
-        } else if (deltaX == 2 && deltaY == 2) {
-            int x1 = x0 + (newX - x0) / 2;
-            int y1 = y0 + (newY - y0) / 2;
+            if (piece.getColor() == PawnColor.WHITE && newY >= toBoard(piece.getOldY()))
+                return new MoveResult(MoveType.NONE);
 
-            if (chessBoard[x1][y1].hasPiece() && chessBoard[x1][y1].getPiece().getColor() != piece.getColor()) {
-                return new MoveResult(MoveType.KILL, chessBoard[x1][y1].getPiece());
+            //check if the move is outside the chessboard
+            if (newX < 0 || newX >= measure || newY < 0 || newY >= measure) {
+                return new MoveResult(MoveType.NONE);
+            }
+
+            if (chessBoard[newX][newY].hasPiece() && chessBoard[newX][newY].getPiece().getColor() != piece.getColor()) {
+                if (newX == toBoard(piece.getOldX())) {
+                    whiteMove = !whiteMove;
+                    return new MoveResult(MoveType.NONE);
+                }
+                else{
+                    whiteMove = !whiteMove;
+                    return new MoveResult(MoveType.KILL, chessBoard[newX][newY].getPiece());
+            }}
+
+            int x0 = toBoard(piece.getOldX());
+            int y0 = toBoard(piece.getOldY());
+
+            int deltaX = Math.abs(newX - x0);
+            int deltaY = Math.abs(newY - y0);
+
+            if ((deltaX == 1 && deltaY == 1) ||
+                    (deltaX == 0 && deltaY == 1 && piece.getColor().moveDirection == 1) ||
+                    (deltaX == 0 && deltaY == 1 && piece.getColor().moveDirection == -1)) {
+                whiteMove = !whiteMove;
+                return new MoveResult(MoveType.NORMAL);
+            } else if (deltaX == 2 && deltaY == 2) {
+                int x1 = x0 + (newX - x0) / 2;
+                int y1 = y0 + (newY - y0) / 2;
+
+
             }
         }
 
-        return new MoveResult(MoveType.NONE);
+            return new MoveResult(MoveType.NONE);
     }
+
 
 
     @Override
