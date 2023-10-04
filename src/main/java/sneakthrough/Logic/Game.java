@@ -39,6 +39,30 @@ public class Game {
         }
     }
 
+    // EXPERIMENTS METHOD, DONT USE //
+    public String startGameExperiments() {
+        while (!isGameOver()) {
+            if (turn) {
+                player1.makeMove(board);
+                //board.printBoard();
+                turn = false;
+            } else {
+                player2.makeMove(board);
+//                board.printBoard();
+                turn = true;
+            }
+        }
+
+        if (isWhiteWinner()) {
+            return "white";
+        } else if (isBlackWinner()) {
+            return "black";
+        }
+        return null;
+    }
+
+    // ---------------------------- //
+
     public Board getBoard() {
         return board;
     }
@@ -79,7 +103,7 @@ public class Game {
                 }
             }
         }
-        System.out.println("black pieces left: " + blackPiecesLeft);
+        //System.out.println("black pieces left: " + blackPiecesLeft);
         return blackPiecesLeft == 0;
     }
 
@@ -101,7 +125,7 @@ public class Game {
                 }
             }
         }
-        System.out.println("white pieces left: " + whitePiecesLeft);
+        //System.out.println("white pieces left: " + whitePiecesLeft);
         return whitePiecesLeft == 0;
     }
 

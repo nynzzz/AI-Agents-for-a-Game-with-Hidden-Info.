@@ -36,7 +36,7 @@ public class RandomPlayer implements Player{
         int[] move = getRandomMove(validMoves);
         // check if move is a capture
         if(isCaptureMove(board, piece, move)){
-            System.out.println("Its a capture move");
+//            System.out.println("Its a capture move");
             Piece capturedPiece = board.getGrid()[move[0]][move[1]];
             // remove captured piece
             board.removeCapturedPiece(capturedPiece);
@@ -51,14 +51,14 @@ public class RandomPlayer implements Player{
         }
         // check if move is a reveal move
         else if(isRevealMove(board, piece, move)){
-            System.out.println("Its a reveal move");
+//            System.out.println("Its a reveal move");
             // reveal piece of the opponent
             board.getGrid()[move[0]][move[1]].setStatus(true);
             //stay at the same position
         }
         // the move is neither a capture or a reveal move
         else{
-            System.out.println("Its a normal move");
+//            System.out.println("Its a normal move");
             // move piece
             board.getGrid()[move[0]][move[1]] = piece;
             // remove piece from old position
