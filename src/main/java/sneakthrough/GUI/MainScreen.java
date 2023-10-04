@@ -223,6 +223,8 @@ public class MainScreen extends Application {
         startGameButton.setLayoutX(screenWidth/2 - 100);
         startGameButton.setLayoutY(screenHeight/2 + 100);
 
+        Scene gameScene = new Scene(createChessboard());
+
         startGameButton.setOnAction(e ->
         {
             if (whitePlayerCB.getValue() == "Human") whitePlayer = new HumanPlayer("white") ;
@@ -231,6 +233,8 @@ public class MainScreen extends Application {
             if (blackPlayerCB.getValue() == "Human") blackPlayer = new HumanPlayer("black") ;
             else blackPlayer = new RandomPlayer("black");
 
+            stage.setScene(gameScene);
+            stage.setMaximized(true);
         });
 
         mainMenuGroup.getChildren().addAll(gameName,groupNumber,blackPlayerCB,whitePlayerCB,whitePlayerLabel,blackPlayerLabel, startGameButton) ;
