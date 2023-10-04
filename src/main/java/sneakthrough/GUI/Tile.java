@@ -26,7 +26,11 @@ public class Tile extends Rectangle{
 
             relocate(x * MainScreen.TILE_SIZE, y * MainScreen.TILE_SIZE);
 
-            setFill(light ? Color.valueOf("#f2e1c3") : Color.valueOf("#c3a082"));
+            if (light) {
+                setFill(Color.valueOf("#f2e1c3"));
+            } else {
+                setFill(Color.valueOf("#c3a082"));
+            }
         }
     }
 

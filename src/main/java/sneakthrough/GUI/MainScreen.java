@@ -125,7 +125,7 @@ public class MainScreen extends Application {
                     chessBoard[x0][y0].setPiece(null);
                     chessBoard[newX][newY].setPiece(pawn);
 
-                    Pawn otherPawn = result.getPiece();
+                    Pawn otherPawn = result.getPawn();
                     chessBoard[toBoard(otherPawn.getOldX())][toBoard(otherPawn.getOldY())].setPiece(null);
                     pawn.getChildren().remove(otherPawn);
                     break;
@@ -144,9 +144,9 @@ public class MainScreen extends Application {
         int x0 = toBoard(piece.getOldX());
         int y0 = toBoard(piece.getOldY());
 
-        if (Math.abs(newX - x0) == 1 && newY - y0 == piece.getColor().moveDir) {
+        if (Math.abs(newX - x0) == 1 && newY - y0 == piece.getColor().moveDirection) {
             return new MoveResult(MoveType.NORMAL);
-        } else if (Math.abs(newX - x0) == 2 && newY - y0 == piece.getColor().moveDir * 2) {
+        } else if (Math.abs(newX - x0) == 2 && newY - y0 == piece.getColor().moveDirection * 2) {
 
             int x1 = x0 + (newX - x0) / 2;
             int y1 = y0 + (newY - y0) / 2;

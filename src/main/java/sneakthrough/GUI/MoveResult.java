@@ -8,19 +8,19 @@ public class MoveResult {
         return type;
     }
 
-    private Pawn piece;
+    private Pawn pawn;
 
-    public Pawn getPiece() {
-        return piece;
+    public Pawn getPawn() {
+        return pawn;
     }
 
     public MoveResult(MoveType type) {
         this(type, null);
     }
 
-    public MoveResult(MoveType type, Pawn piece) {
+    public MoveResult(MoveType type, Pawn pawn) {
         this.type = type;
-        this.piece = piece;
+        this.pawn = pawn;
     }
 
 }

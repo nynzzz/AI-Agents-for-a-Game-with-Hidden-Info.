@@ -9,7 +9,6 @@ import static sneakthrough.GUI.MainScreen.TILE_SIZE;
 public class Pawn extends StackPane {
 
     private PawnColor color;
-
     private double mouseX, mouseY;
     private double oldX, oldY;
 
