@@ -40,7 +40,7 @@ public class MainScreen extends Application {
     final double screenWidth = primaryScreenBounds.getWidth();
     final double screenHeight = primaryScreenBounds.getHeight();
     int boardSize = mainBoard.getSize() ;
-    public static final int TILE_SIZE = 100;
+    public static final int TILE_SIZE = 80;
     public static final int measure = 8 ;
     private Tile[][] chessBoard = new Tile[measure][measure] ;
 
@@ -54,8 +54,8 @@ public class MainScreen extends Application {
     {
         Pane root = new Pane();
 
-        root.setLayoutX(screenWidth/2 - 350);
-        root.setLayoutY(screenHeight/2 - 350);
+        root.setLayoutX(screenWidth/2 - 300);
+        root.setLayoutY(screenHeight/2 - 300);
 
         root.setPrefSize(measure*TILE_SIZE, measure * TILE_SIZE);
         root.getChildren().addAll(tileGroup, pawnGroup) ;
@@ -136,18 +136,25 @@ public class MainScreen extends Application {
     }
 
     private MoveResult tryMove(Pawn piece, int newX, int newY) {
+        if (newX < 0 || newX >= measure || newY < 0 || newY >= measure) {
+            return new MoveResult(MoveType.NONE);
+        }
 
-        if (chessBoard[newX][newY].hasPiece() || (newX + newY) % 2 == 0) {
+        if (chessBoard[newX][newY].hasPiece()) {
             return new MoveResult(MoveType.NONE);
         }
 
         int x0 = toBoard(piece.getOldX());
         int y0 = toBoard(piece.getOldY());
 
-        if (Math.abs(newX - x0) == 1 && newY - y0 == piece.getColor().moveDirection) {
-            return new MoveResult(MoveType.NORMAL);
-        } else if (Math.abs(newX - x0) == 2 && newY - y0 == piece.getColor().moveDirection * 2) {
+        int deltaX = Math.abs(newX - x0);
+        int deltaY = Math.abs(newY - y0);
 
+        if ((deltaX == 1 && deltaY == 1) ||
+                (deltaX == 0 && deltaY == 1 && piece.getColor().moveDirection == 1) ||
+                (deltaX == 0 && deltaY == 1 && piece.getColor().moveDirection == -1)) {
+            return new MoveResult(MoveType.NORMAL);
+        } else if (deltaX == 2 && deltaY == 2) {
             int x1 = x0 + (newX - x0) / 2;
             int y1 = y0 + (newY - y0) / 2;
 
@@ -158,6 +165,7 @@ public class MainScreen extends Application {
 
         return new MoveResult(MoveType.NONE);
     }
+
 
     @Override
     public void start(Stage stage) throws Exception{

@@ -12,6 +12,8 @@ public class Pawn extends StackPane {
     private double mouseX, mouseY;
     private double oldX, oldY;
 
+    private int moveDirection ;
+
     public PawnColor getColor() {
         return color;
     }
@@ -26,6 +28,8 @@ public class Pawn extends StackPane {
 
     public Pawn(PawnColor color, int x, int y) {
         this.color = color;
+
+        this.moveDirection = color.moveDirection;
 
         move(x, y);
 
