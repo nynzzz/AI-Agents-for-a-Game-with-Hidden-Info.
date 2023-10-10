@@ -9,6 +9,9 @@ import java.util.Scanner;
 
 public class HumanPlayer implements Player{
 
+    private Piece pieceToMove = null;
+    private int[] moveToMake = null;
+
     private String color;
 
     public HumanPlayer(String color) {
@@ -19,17 +22,35 @@ public class HumanPlayer implements Player{
         return this.color;
     }
 
+    // ------//
+    public void setPieceToMove(Piece piece){
+        this.pieceToMove = piece;
+    }
+    public Piece getPieceToMove(){
+        return this.pieceToMove;
+    }
+
+    public void setMoveToMake(int[] move){
+        this.moveToMake = move;
+    }
+    public int[] getMoveToMake(){
+        return this.moveToMake;
+    }
+
+    // ------//
     @Override
     public void makeMove(Board board) {
         // ask the human player to select a piece to move
-        Piece piece = selectPiece(board);
+        //Piece piece = selectPiece(board);
+        Piece piece = this.pieceToMove;
         if(piece == null){
             // ask the human player to select a move
             System.out.println("There is no piece at this (i,j) !!!");
             piece = selectPiece(board);
         }
         // ask the human player to select a move
-        int[] move = selectMove();
+        //int[] move = selectMove();
+        int[] move = this.moveToMake;
 
         // check if move is valid
         if(isValidMove(board, piece, move)){

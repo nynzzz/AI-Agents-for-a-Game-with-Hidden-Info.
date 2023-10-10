@@ -272,7 +272,7 @@ public class MainScreen extends Application {
 
         mainMenuGroup.getChildren().addAll(gameName,groupNumber,blackPlayerCB,whitePlayerCB,whitePlayerLabel,blackPlayerLabel, startGameButton) ;
 
-        stage.setScene(gameScene);
+        stage.setScene(mainMenu);
         stage.setFullScreen(true);
         stage.show();
     }
