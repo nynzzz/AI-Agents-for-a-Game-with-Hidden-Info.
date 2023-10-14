@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 public class HumanPlayer implements Player{
 
-    private Piece pieceToMove = null;
-    private int[] moveToMake = null;
+    private static Piece pieceToMove;
+    private static int[] moveToMake;
 
     private String color;
 
@@ -24,17 +24,17 @@ public class HumanPlayer implements Player{
 
     // ------//
     public void setPieceToMove(Piece piece){
-        this.pieceToMove = piece;
+        pieceToMove = piece;
     }
     public Piece getPieceToMove(){
-        return this.pieceToMove;
+        return pieceToMove;
     }
 
     public void setMoveToMake(int[] move){
-        this.moveToMake = move;
+        moveToMake = move;
     }
     public int[] getMoveToMake(){
-        return this.moveToMake;
+        return moveToMake;
     }
 
     // ------//
@@ -43,11 +43,11 @@ public class HumanPlayer implements Player{
         // ask the human player to select a piece to move
         //Piece piece = selectPiece(board);
         Piece piece = this.pieceToMove;
-        if(piece == null){
-            // ask the human player to select a move
-            System.out.println("There is no piece at this (i,j) !!!");
-            piece = selectPiece(board);
-        }
+//        if(piece == null){
+//            // ask the human player to select a move
+////            System.out.println("There is no piece at this (i,j) !!!");
+////            piece = selectPiece(board);
+//        }
         // ask the human player to select a move
         //int[] move = selectMove();
         int[] move = this.moveToMake;
@@ -89,7 +89,7 @@ public class HumanPlayer implements Player{
         }
         else{
             // ask the human player to select a move
-            System.out.println("This move is not valid !!!");
+//            System.out.println("This move is not valid !!!");
             makeMove(board);
         }
     }
