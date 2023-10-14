@@ -2,6 +2,7 @@ package sneakthrough.GUI_new;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -26,8 +27,10 @@ public class GameScreen {
     String whitePlayerType;
     String blackPlayerType;
 
-    private final int screen_width = 800;
-    private final int screen_height = 600;
+    private Button changeTurn = new Button("Make move");
+
+    private final int screen_width = 1920;
+    private final int screen_height = 1080;
     private final Font font = Font.font("Arial", 24);
 
     // Create a new board
@@ -47,15 +50,22 @@ public class GameScreen {
     Image blackPawnImage = new Image(getClass().getResourceAsStream("/GUI/black_piece.png"));
 
 
-
     public void start(Stage gameStage, String player1Type, String player2Type) {
+
+        gameBoard.setLayoutX(screen_width/2 - 320);
+        gameBoard.setLayoutY(screen_height/2 - 300);
+
+        changeTurn.setLayoutX(1400);
+        changeTurn.setLayoutY(550);
+        changeTurn.setPrefWidth(200);
+        changeTurn.setStyle("-fx-font: 24px 'Arial';");
 
         whitePlayerType = player1Type;
 //        System.out.println("white player type: " + whitePlayerType);
         blackPlayerType = player2Type;
 //        System.out.println("black player type: " + blackPlayerType);
 
-        gameStage.setTitle("Game Screen");
+        gameStage.setTitle("Sneakthrough : " + player1Type + " vs " + player2Type);
 
 
         //HBox to center the game board vertically and horizontally
@@ -69,8 +79,8 @@ public class GameScreen {
         for (int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
                 ImageView pieceImageView = new ImageView();
-                pieceImageView.setFitWidth(50);
-                pieceImageView.setFitHeight(50);
+                pieceImageView.setFitWidth(65);
+                pieceImageView.setFitHeight(65);
                 // check if Piece
                 if (grid[row][col] != null) {
                     // if piece is white
@@ -85,7 +95,7 @@ public class GameScreen {
 
                 // button with the pawn image as graphic
                 Button cellButton = new Button("", pieceImageView);
-                cellButton.setMinSize(50, 50);
+                cellButton.setMinSize(80, 80);
                 // background colors
                 if ((row + col) % 2 == 0) {
                     cellButton.setStyle("-fx-background-color: #FFFFCC;"); // Light yellow
@@ -145,6 +155,7 @@ public class GameScreen {
                                     System.out.println("black player made a move");
                                 }
                             }
+
                         }
                     });
                 }
@@ -155,10 +166,14 @@ public class GameScreen {
 
         // scene for the game screen
         Scene gameScene = new Scene(centerBox, screen_width, screen_height);
+
+        Group gameGroup = new Group();
+        gameScene.setRoot(gameGroup);
+        gameGroup.getChildren().addAll(gameBoard,changeTurn);
+
         gameStage.setScene(gameScene);
         gameStage.show();
     }
-
 
     // helper methods
 
