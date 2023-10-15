@@ -1,56 +1,72 @@
 package sneakthrough.GUI_new;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Game;
 import sneakthrough.Logic.Piece;
 import sneakthrough.Player.HumanPlayer;
 import sneakthrough.Player.Player;
-
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GameScreen {
+//TODO
+//  notify players when game is finished NOT STARTED
+//  fix dissapearing pawn DONE
+//  if enough time add info on overtaken pawns optional NOT STARTED
+//  when moving orthogonally DONE
 
+public class GameScreen {
     private Piece selectedPiece;
     private int[] targetMove;
-
     String whitePlayerType;
     String blackPlayerType;
-
     private Button changeTurn = new Button("Make move");
-
     private final int screen_width = 1920;
     private final int screen_height = 1080;
     private final Font font = Font.font("Arial", 24);
-
-    // Create a new board
     private Board board = new Board();
-    // Get the board size
     private int boardSize = board.getSize();
-    // Get the board grid
     private Piece[][] grid = board.getGrid();
-
     private boolean isWhiteTurn = true;
-
-    // Create a GridPane to represent the game board
     private GridPane gameBoard = new GridPane();
-
-    // pawn images
     Image whitePawnImage = new Image(getClass().getResourceAsStream("/GUI/white_piece.png"));
     Image blackPawnImage = new Image(getClass().getResourceAsStream("/GUI/black_piece.png"));
-
+    private Timeline gameTimer;
+    private int elapsedTimeInSeconds;
+    private Label timeLabel;
+    private ArrayList<Piece> revealArray = new ArrayList<>();
 
     public void start(Stage gameStage, String player1Type, String player2Type) {
+
+        gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            elapsedTimeInSeconds++;
+            updateTimerLabel();
+        }));
+        gameTimer.setCycleCount(Timeline.INDEFINITE);
+
+        gameTimer.play() ;
+
+        timeLabel = new Label("Time: 00:00");
+        timeLabel.setLayoutX(1425);
+        timeLabel.setLayoutY(500);
+        timeLabel.setStyle("-fx-font: 24px 'Arial';");
 
         gameBoard.setLayoutX(screen_width/2 - 320);
         gameBoard.setLayoutY(screen_height/2 - 300);
@@ -61,21 +77,15 @@ public class GameScreen {
         changeTurn.setStyle("-fx-font: 24px 'Arial';");
 
         whitePlayerType = player1Type;
-//        System.out.println("white player type: " + whitePlayerType);
         blackPlayerType = player2Type;
-//        System.out.println("black player type: " + blackPlayerType);
 
         gameStage.setTitle("Sneakthrough : " + player1Type + " vs " + player2Type);
 
-
-        //HBox to center the game board vertically and horizontally
         HBox centerBox = new HBox();
         centerBox.getChildren().add(gameBoard);
         centerBox.setAlignment(javafx.geometry.Pos.CENTER);
-        centerBox.setPadding(new javafx.geometry.Insets(50, 0, 0, 0)); // Add top padding to shift the board down
+        centerBox.setPadding(new javafx.geometry.Insets(50, 0, 0, 0));
 
-
-        // Create buttons with pawn images and a different background color
         for (int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
                 ImageView pieceImageView = new ImageView();
@@ -88,9 +98,11 @@ public class GameScreen {
                         pieceImageView.setImage(whitePawnImage);
                     }
                     // if piece is black
-                    else {
+                    else if (grid[row][col].getColor().equals("black")){
                         pieceImageView.setImage(blackPawnImage);
+                        pieceImageView.setVisible(false);
                     }
+                    else pieceImageView.setImage(null);
                 }
 
                 // button with the pawn image as graphic
@@ -102,7 +114,6 @@ public class GameScreen {
                 } else {
                     cellButton.setStyle("-fx-background-color: #FFCC99;"); // Light orange
                 }
-
 
                 int finalRow = row;
                 int finalCol = col;
@@ -137,9 +148,31 @@ public class GameScreen {
 
                                     whitePlayer.makeMove(board);
                                     updateBoardScreen(board);
+
+                                    // white reveals black
+                                    if(whitePlayer.moveType.equals("reveal"))
+                                    {
+                                        int x = whitePlayer.getPieceToMove().getPosition()[0]-1;
+                                        int y = whitePlayer.getPieceToMove().getPosition()[1]; // Assuming forward is +1 in the column direction. Adjust if necessary.
+                                        revealArray.add(grid[y][x]);
+                                    }
+
                                     selectedPiece = null;
                                     isWhiteTurn = !isWhiteTurn;
                                     System.out.println("white player made a move");
+
+                                    for (Node node : gameBoard.getChildren())
+                                    {
+                                        if (node instanceof Button)
+                                        {
+                                            Button button = (Button) node;
+                                            ImageView imgView = (ImageView)button.getGraphic();
+                                            if (imgView != null && imgView.getImage() == whitePawnImage)
+                                            {
+                                                button.setDisable(true);
+                                            }
+                                        }
+                                    }
 
                                 } else {
                                     blackPlayer.setMoveToMake(new int[]{finalRow, finalCol});
@@ -150,29 +183,87 @@ public class GameScreen {
 
                                     blackPlayer.makeMove(board);
                                     updateBoardScreen(board);
+
+                                    //black reveals white
+                                    if(blackPlayer.moveType.equals("reveal"))
+                                    {
+                                        int x = blackPlayer.getPieceToMove().getPosition()[0] +1;
+                                        int y = blackPlayer.getPieceToMove().getPosition()[1] ; // Assuming forward is -1 in the column direction for the black player. Adjust if necessary.
+                                        revealArray.add(grid[x][y]);
+                                    }
+
                                     selectedPiece = null;
                                     isWhiteTurn = !isWhiteTurn;
                                     System.out.println("black player made a move");
+
+                                    for (Node node : gameBoard.getChildren())
+                                    {
+                                        if (node instanceof Button)
+                                        {
+                                            Button button = (Button) node;
+                                            ImageView imgView = (ImageView)button.getGraphic();
+                                            if (imgView != null && imgView.getImage() == blackPawnImage)
+                                            {
+                                                button.setDisable(true);
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
                         }
                     });
                 }
-            gameBoard.add(cellButton, col, row);
+                gameBoard.add(cellButton, col, row);
+            }
         }
-    }
 
+        changeTurn.setOnAction(e -> {
+            for (Node node : gameBoard.getChildren()) {
+
+                if (node instanceof Button) {
+                    node.setDisable(false);
+                    Button button = (Button) node;
+                    ImageView imgView = (ImageView) button.getGraphic();
+                    int row = GridPane.getRowIndex(button);
+                    int col = GridPane.getColumnIndex(button);
+
+                    if (row >= 0 && col >= 0) {
+                        Piece piece = grid[row][col];
+                        if (piece != null)
+                        { if (revealArray.contains(piece)) {
+                            imgView.setVisible(true);
+                        }else{
+                            // Check the color of the piece on the logical board
+                            if (piece.getColor().equals("white") && isWhiteTurn) {
+                                imgView.setVisible(true);
+                            } else if (piece.getColor().equals("black") && !isWhiteTurn) {
+                                imgView.setVisible(true);
+                            } else{
+                                imgView.setVisible(false);
+                            }
+                        }
+                        }
+                    }
+                }
+            }
+        });
 
         // scene for the game screen
         Scene gameScene = new Scene(centerBox, screen_width, screen_height);
 
         Group gameGroup = new Group();
         gameScene.setRoot(gameGroup);
-        gameGroup.getChildren().addAll(gameBoard,changeTurn);
+        gameGroup.getChildren().addAll(gameBoard,changeTurn,timeLabel);
 
         gameStage.setScene(gameScene);
         gameStage.show();
+    }
+
+    private void updateTimerLabel() {
+        int minutes = elapsedTimeInSeconds / 60;
+        int seconds = elapsedTimeInSeconds % 60;
+        timeLabel.setText(String.format("Time: %02d:%02d", minutes, seconds));
     }
 
     // helper methods
@@ -202,30 +293,31 @@ public class GameScreen {
         player.makeMove(board);
         // Update the game board based on the logic board
         updateBoardScreen(board);
+
     }
 
 
 
-        private void updateBoardScreen (Board board){
-            Piece[][] updatedGrid = board.getGrid();
+    private void updateBoardScreen (Board board){
+        Piece[][] updatedGrid = board.getGrid();
 
-            for (int row = 0; row < boardSize; row++) {
-                for (int col = 0; col < boardSize; col++) {
-                    Button cellButton = (Button) gameBoard.getChildren().get(row * boardSize + col);
-                    ImageView pieceImageView = (ImageView) cellButton.getGraphic();
+        for (int row = 0; row < boardSize; row++) {
+            for (int col = 0; col < boardSize; col++) {
+                Button cellButton = (Button) gameBoard.getChildren().get(row * boardSize + col);
+                ImageView pieceImageView = (ImageView) cellButton.getGraphic();
 
-                    if (updatedGrid[row][col] != null) {
-                        // If there's a piece on the logical board, update the image
-                        if (updatedGrid[row][col].getColor().equals("white")) {
-                            pieceImageView.setImage(whitePawnImage);
-                        } else {
-                            pieceImageView.setImage(blackPawnImage);
-                        }
+                if (updatedGrid[row][col] != null) {
+                    // If there's a piece on the logical board, update the image
+                    if (updatedGrid[row][col].getColor().equals("white")) {
+                        pieceImageView.setImage(whitePawnImage);
                     } else {
-                        // If there's no piece, clear the image
-                        pieceImageView.setImage(null);
+                        pieceImageView.setImage(blackPawnImage);
                     }
+                } else {
+                    // If there's no piece, clear the image
+                    pieceImageView.setImage(null);
                 }
             }
         }
+    }
 }

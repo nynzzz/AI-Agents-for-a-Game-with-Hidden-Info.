@@ -12,6 +12,8 @@ public class HumanPlayer implements Player{
     private static Piece pieceToMove;
     private static int[] moveToMake;
 
+    public String moveType ;
+
     private String color;
 
     public HumanPlayer(String color) {
@@ -57,6 +59,7 @@ public class HumanPlayer implements Player{
             // check if move is a capture
             if(isCaptureMove(board, piece, move)){
                 System.out.println("Its a capture move");
+                moveType = "capture";
                 Piece capturedPiece = board.getGrid()[move[0]][move[1]];
                 // remove captured piece
                 board.removeCapturedPiece(capturedPiece);
@@ -72,6 +75,7 @@ public class HumanPlayer implements Player{
             // check if move is a reveal move
             else if(isRevealMove(board, piece, move)){
                 System.out.println("Its a reveal move");
+                moveType = "reveal" ;
                 // reveal piece of the opponent
                 board.getGrid()[move[0]][move[1]].setStatus(true);
                 //stay at the same position
@@ -79,6 +83,7 @@ public class HumanPlayer implements Player{
             // the move is neither a capture or a reveal move
             else{
                 System.out.println("Its a normal move");
+                moveType = "normal";
                 // move piece
                 board.getGrid()[move[0]][move[1]] = piece;
                 // remove piece from old position
