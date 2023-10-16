@@ -18,27 +18,28 @@ import javafx.stage.Stage;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import sneakthrough.Logic.Board;
-import sneakthrough.Logic.Game;
 import sneakthrough.Logic.Piece;
 import sneakthrough.Player.HumanPlayer;
 import sneakthrough.Player.Player;
 import sneakthrough.Player.RandomPlayer;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 //TODO
-//  notify players when game is finished NOT STARTED
-//  fix dissapearing pawn DONE
 //  if enough time add info on overtaken pawns optional NOT STARTED
-//  when moving orthogonally DONE
+
+//DONE
+//  fix dissapearing pawn
+//  when moving orthogonally
+//  notify players when game is finished
+
 
 public class GameScreen {
     private Piece selectedPiece;
     private int[] targetMove;
     String whitePlayerType;
     String blackPlayerType;
+    private boolean isFinished = false ;
     private Button changeTurn = new Button("Make move");
     private final int screen_width = 1200;
     private final int screen_height = 800;
@@ -129,6 +130,8 @@ public class GameScreen {
                     cellButton.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
+
+                            if(!isFinished)
                             if (selectedPiece == null) {
                                 // Assign this piece as pieceToMove for the current player
                                 if (isWhiteTurn) {
@@ -176,6 +179,27 @@ public class GameScreen {
                                         }
                                     }
 
+                                    if(whitePlayer.getMoveToMake()[0] == 0)
+                                    {
+                                        for (Node node : gameBoard.getChildren())
+                                        {
+                                            if (node instanceof Button)
+                                            {
+                                                Button button = (Button) node ;
+                                                ImageView imgView = (ImageView)button.getGraphic();
+                                                imgView.setVisible(true);
+                                            }
+                                        }
+
+                                        isFinished = true ;
+                                        Alert win = new Alert(Alert.AlertType.INFORMATION);
+                                        win.setContentText("Player " + whitePlayer.getColor() + " has won!");
+                                        win.setTitle("Game finished");
+                                        win.showAndWait();
+                                        gameTimer.stop();
+
+                                    }
+
                                 } else {
                                     blackPlayer.setMoveToMake(new int[]{finalRow, finalCol});
                                     System.out.println("black player move to make: " + Arrays.toString(blackPlayer.getMoveToMake()));
@@ -209,6 +233,27 @@ public class GameScreen {
                                                 button.setDisable(true);
                                             }
                                         }
+                                    }
+
+                                    if(blackPlayer.getMoveToMake()[0] == 7)
+                                    {
+
+                                        for (Node node : gameBoard.getChildren())
+                                        {
+                                            if (node instanceof Button)
+                                            {
+                                                Button button = (Button) node ;
+                                                ImageView imgView = (ImageView)button.getGraphic();
+                                                imgView.setVisible(true);
+                                            }
+                                        }
+
+                                        isFinished = true ;
+                                        Alert win = new Alert(Alert.AlertType.INFORMATION);
+                                        win.setContentText("Player " + blackPlayer.getColor() + " has won!");
+                                        win.setTitle("Game finished");
+                                        win.showAndWait();
+                                        gameTimer.stop();
                                     }
                                 }
                             }
@@ -250,14 +295,6 @@ public class GameScreen {
                                     humanPlayer.makeMove(board);
                                     updateBoardScreen(board);
 
-//                                    // white reveals black
-//                                    if(humanPlayer.moveType.equals("reveal"))
-//                                    {
-//                                        int x = humanPlayer.getPieceToMove().getPosition()[0]-1;
-//                                        int y = humanPlayer.getPieceToMove().getPosition()[1]; // Assuming forward is +1 in the column direction. Adjust if necessary.
-//                                        revealArray.add(grid[y][x]);
-//                                    }
-
                                     selectedPiece = null;
                                     isWhiteTurn = !isWhiteTurn;
                                     System.out.println("white player made a move");
@@ -280,14 +317,6 @@ public class GameScreen {
                                     randomPlayer.makeMove(board);
                                     System.out.println("here2");
                                     updateBoardScreen(board);
-
-//                                    //black reveals white
-//                                    if(blackPlayer.moveType.equals("reveal"))
-//                                    {
-//                                        int x = blackPlayer.getPieceToMove().getPosition()[0] +1;
-//                                        int y = blackPlayer.getPieceToMove().getPosition()[1] ; // Assuming forward is -1 in the column direction for the black player. Adjust if necessary.
-//                                        revealArray.add(grid[x][y]);
-//                                    }
 
                                     isWhiteTurn = !isWhiteTurn;
                                     System.out.println("black player made a move");
