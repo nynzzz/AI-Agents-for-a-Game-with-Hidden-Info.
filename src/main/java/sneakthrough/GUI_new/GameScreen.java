@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,12 +19,14 @@ import javafx.stage.Stage;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import sneakthrough.Logic.Board;
+import sneakthrough.Logic.Game;
 import sneakthrough.Logic.Piece;
 import sneakthrough.Player.HumanPlayer;
 import sneakthrough.Player.Player;
 import sneakthrough.Player.RandomPlayer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
 //TODO
 //  if enough time add info on overtaken pawns optional NOT STARTED
@@ -195,8 +198,18 @@ public class GameScreen {
                                             Alert win = new Alert(Alert.AlertType.INFORMATION);
                                             win.setContentText("Player " + whitePlayer.getColor() + " has won!");
                                             win.setTitle("Game finished");
-                                            win.showAndWait();
+                                            //win.showAndWait();
+
+                                            Optional<ButtonType> result = win.showAndWait();
+                                            if (result.get() == ButtonType.OK){
+                                                gameStage.close();
+                                            }
+                                            if(result.get()==ButtonType.CANCEL){
+                                                gameStage.close();
+                                            }
+
                                             gameTimer.stop();
+                                            //changeTurn.setDisable(true);
 
                                         }
 
@@ -252,8 +265,18 @@ public class GameScreen {
                                             Alert win = new Alert(Alert.AlertType.INFORMATION);
                                             win.setContentText("Player " + blackPlayer.getColor() + " has won!");
                                             win.setTitle("Game finished");
-                                            win.showAndWait();
+                                            //win.showAndWait();
                                             gameTimer.stop();
+
+                                            Optional<ButtonType> result = win.showAndWait();
+                                            if (result.get() == ButtonType.OK){
+                                                gameStage.close();
+                                            }
+                                            if(result.get()==ButtonType.CANCEL){
+                                                gameStage.close();
+                                            }
+
+                                            //changeTurn.setDisable(true);
                                         }
                                     }
                                 }
