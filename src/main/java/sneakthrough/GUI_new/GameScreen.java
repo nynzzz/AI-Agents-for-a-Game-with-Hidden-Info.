@@ -333,9 +333,9 @@ public class GameScreen {
                             imgView.setVisible(true);
                         }else{
                             // Check the color of the piece on the logical board
-                            if (piece.getColor().equals("white") && isWhiteTurn) {
+                            if ((piece.getColor().equals("white") && isWhiteTurn) || (piece.getColor().equals("black") && piece.getStatus() && isWhiteTurn)) {
                                 imgView.setVisible(true);
-                            } else if (piece.getColor().equals("black") && !isWhiteTurn) {
+                            } else if ((piece.getColor().equals("black") && !isWhiteTurn) || (piece.getColor().equals("white") && piece.getStatus() && !isWhiteTurn)) {
                                 imgView.setVisible(true);
                             } else{
                                 imgView.setVisible(false);

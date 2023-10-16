@@ -44,7 +44,7 @@ public class HumanPlayer implements Player{
     public void makeMove(Board board) {
         // ask the human player to select a piece to move
         //Piece piece = selectPiece(board);
-        Piece piece = this.pieceToMove;
+        Piece piece = pieceToMove;
 //        if(piece == null){
 //            // ask the human player to select a move
 ////            System.out.println("There is no piece at this (i,j) !!!");
@@ -52,10 +52,19 @@ public class HumanPlayer implements Player{
 //        }
         // ask the human player to select a move
         //int[] move = selectMove();
-        int[] move = this.moveToMake;
+        int[] move = moveToMake;
 
         // check if move is valid
         if(isValidMove(board, piece, move)){
+
+            //print valid moves
+            System.out.println("Valid moves are : ");
+            ArrayList<int[]> validMoves = getValidMoves(board, piece);
+            for(int[] validMove : validMoves){
+                System.out.println(validMove[0] + "," + validMove[1]);
+            }
+
+
             // check if move is a capture
             if(isCaptureMove(board, piece, move)){
                 System.out.println("Its a capture move");
@@ -128,12 +137,19 @@ public class HumanPlayer implements Player{
                 int[] forward = {piecePosition[0] - 1, piecePosition[1]};
                 // if there is no white piece in the forward move or its null
                 if(board.getGrid()[forward[0]][forward[1]] == null || !Objects.equals(board.getGrid()[forward[0]][forward[1]].getColor(), "white")){
+//                    System.out.println("MOVE ADDED TO VALID MOVES FOR WHITE");
                     validMoves.add(forward);
                 }
 //                // if there is a black piece in the forward move with hidden (false) status
 //                else if(board.getGrid()[forward[0]][forward[1]].getStatus() == false){
 //                    validMoves.add(forward);
 //                }
+                // if there is a black piece in the forward move with reviled (true) status
+                if(board.getGrid()[forward[0]][forward[1]] != null && (board.getGrid()[forward[0]][forward[1]].getColor().equals("black") && board.getGrid()[forward[0]][forward[1]].getStatus())){
+                    // do not add it to valid moves and continue
+//                    System.out.println("HERE FOR WHITE");
+                    validMoves.remove(forward);
+                }
             }
         }
 
@@ -167,6 +183,12 @@ public class HumanPlayer implements Player{
 //                else if(board.getGrid()[forward[0]][forward[1]].getStatus() == false){
 //                    validMoves.add(forward);
 //                }
+                // if there is a white piece in the forward move with reviled (true) status
+                if(board.getGrid()[forward[0]][forward[1]] != null && (board.getGrid()[forward[0]][forward[1]].getColor().equals("black") && board.getGrid()[forward[0]][forward[1]].getStatus())){
+                    // do not add it to valid moves and continue
+                    System.out.println("HERE FOR BLACK");
+                    validMoves.remove(forward);
+                }
             }
         }
         return validMoves;
