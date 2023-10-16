@@ -184,9 +184,9 @@ public class HumanPlayer implements Player{
 //                    validMoves.add(forward);
 //                }
                 // if there is a white piece in the forward move with reviled (true) status
-                if(board.getGrid()[forward[0]][forward[1]] != null && (board.getGrid()[forward[0]][forward[1]].getColor().equals("black") && board.getGrid()[forward[0]][forward[1]].getStatus())){
+                if(board.getGrid()[forward[0]][forward[1]] != null && (board.getGrid()[forward[0]][forward[1]].getColor().equals("white") && board.getGrid()[forward[0]][forward[1]].getStatus())){
                     // do not add it to valid moves and continue
-                    System.out.println("HERE FOR BLACK");
+//                    System.out.println("HERE FOR BLACK");
                     validMoves.remove(forward);
                 }
             }
