@@ -22,6 +22,8 @@ import sneakthrough.Logic.Game;
 import sneakthrough.Logic.Piece;
 import sneakthrough.Player.HumanPlayer;
 import sneakthrough.Player.Player;
+import sneakthrough.Player.RandomPlayer;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,8 +40,8 @@ public class GameScreen {
     String whitePlayerType;
     String blackPlayerType;
     private Button changeTurn = new Button("Make move");
-    private final int screen_width = 1920;
-    private final int screen_height = 1080;
+    private final int screen_width = 1200;
+    private final int screen_height = 800;
     private final Font font = Font.font("Arial", 24);
     private Board board = new Board();
     private int boardSize = board.getSize();
@@ -64,14 +66,14 @@ public class GameScreen {
         gameTimer.play() ;
 
         timeLabel = new Label("Time: 00:00");
-        timeLabel.setLayoutX(1425);
-        timeLabel.setLayoutY(500);
+        timeLabel.setLayoutX(1025); //+25
+        timeLabel.setLayoutY(500); //+50
         timeLabel.setStyle("-fx-font: 24px 'Arial';");
 
         gameBoard.setLayoutX(screen_width/2 - 320);
         gameBoard.setLayoutY(screen_height/2 - 300);
 
-        changeTurn.setLayoutX(1400);
+        changeTurn.setLayoutX(1000);
         changeTurn.setLayoutY(550);
         changeTurn.setPrefWidth(200);
         changeTurn.setStyle("-fx-font: 24px 'Arial';");
@@ -118,7 +120,7 @@ public class GameScreen {
                 int finalRow = row;
                 int finalCol = col;
 
-                // if both of the players is a human player
+                // if both of the players are a human player
                 if (whitePlayerType.equals("Human") && blackPlayerType.equals("Human")) {
 
                     // create 2 human players
@@ -214,6 +216,102 @@ public class GameScreen {
                         }
                     });
                 }
+                // if player 1 is Human and Player 2 is Random or vice versa
+                if(whitePlayerType.equals("Human") && blackPlayerType.equals("Random") || whitePlayerType.equals("Random") && blackPlayerType.equals("Human")){
+
+                    // create 1 human player and 1 random player
+                    HumanPlayer humanPlayer = new HumanPlayer("white");
+                    Player randomPlayer = new RandomPlayer("black");
+                    cellButton.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            if (selectedPiece == null) {
+                                // Assign this piece as pieceToMove for the human player if its his (white) turn
+                                if (isWhiteTurn) {
+                                    selectedPiece = grid[finalRow][finalCol];
+                                    humanPlayer.setPieceToMove(selectedPiece);
+                                    System.out.println("white player piece to move: " + Arrays.toString(humanPlayer.getPieceToMove().getPosition()));
+                                }
+                                else{
+                                    randomPlayer.makeMove(board);
+                                    updateBoardScreen(board);
+                                    isWhiteTurn = !isWhiteTurn;
+                                    System.out.println("black player made a move");
+                                }
+                            }
+                            else {
+                                if (isWhiteTurn) {
+                                    humanPlayer.setMoveToMake(new int[]{finalRow, finalCol});
+                                    System.out.println("white player move to make: " + Arrays.toString(humanPlayer.getMoveToMake()));
+
+                                    System.out.println("PIECE " + Arrays.toString(humanPlayer.getPieceToMove().getPosition()));
+                                    System.out.println("MOVE " + Arrays.toString(humanPlayer.getMoveToMake()));
+
+                                    humanPlayer.makeMove(board);
+                                    updateBoardScreen(board);
+
+//                                    // white reveals black
+//                                    if(humanPlayer.moveType.equals("reveal"))
+//                                    {
+//                                        int x = humanPlayer.getPieceToMove().getPosition()[0]-1;
+//                                        int y = humanPlayer.getPieceToMove().getPosition()[1]; // Assuming forward is +1 in the column direction. Adjust if necessary.
+//                                        revealArray.add(grid[y][x]);
+//                                    }
+
+                                    selectedPiece = null;
+                                    isWhiteTurn = !isWhiteTurn;
+                                    System.out.println("white player made a move");
+
+                                    for (Node node : gameBoard.getChildren())
+                                    {
+                                        if (node instanceof Button)
+                                        {
+                                            Button button = (Button) node;
+                                            ImageView imgView = (ImageView)button.getGraphic();
+                                            if (imgView != null && imgView.getImage() == whitePawnImage)
+                                            {
+                                                button.setDisable(true);
+                                            }
+                                        }
+                                    }
+
+                                } else {
+                                    System.out.println("here1");
+                                    randomPlayer.makeMove(board);
+                                    System.out.println("here2");
+                                    updateBoardScreen(board);
+
+//                                    //black reveals white
+//                                    if(blackPlayer.moveType.equals("reveal"))
+//                                    {
+//                                        int x = blackPlayer.getPieceToMove().getPosition()[0] +1;
+//                                        int y = blackPlayer.getPieceToMove().getPosition()[1] ; // Assuming forward is -1 in the column direction for the black player. Adjust if necessary.
+//                                        revealArray.add(grid[x][y]);
+//                                    }
+
+                                    isWhiteTurn = !isWhiteTurn;
+                                    System.out.println("black player made a move");
+
+                                    for (Node node : gameBoard.getChildren())
+                                    {
+                                        if (node instanceof Button)
+                                        {
+                                            Button button = (Button) node;
+                                            ImageView imgView = (ImageView)button.getGraphic();
+                                            if (imgView != null && imgView.getImage() == blackPawnImage)
+                                            {
+                                                button.setDisable(true);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    });
+
+
+                }
                 gameBoard.add(cellButton, col, row);
             }
         }
@@ -260,43 +358,16 @@ public class GameScreen {
         gameStage.show();
     }
 
+
+
+    // helper methods
+
+
     private void updateTimerLabel() {
         int minutes = elapsedTimeInSeconds / 60;
         int seconds = elapsedTimeInSeconds % 60;
         timeLabel.setText(String.format("Time: %02d:%02d", minutes, seconds));
     }
-
-    // helper methods
-
-    // method to assign the selected piece and target move, perform the move, update the board
-    private void handlePieceButtonClick(HumanPlayer player, int row, int col) {
-        System.out.println("player: " + player.getColor() + " moves");
-
-        // Check if the clicked cell contains a piece
-        if (player.getPieceToMove() == null) {
-            if (grid[row][col] != null && grid[row][col].getColor().equals(player.getColor())) {
-                // Set the selected piece
-                selectedPiece = grid[row][col];
-                // Assign the piece
-                player.setPieceToMove(selectedPiece);
-                System.out.println("Piece selected: " + selectedPiece.getColor() + " " + selectedPiece.getPosition()[0] + " " + selectedPiece.getPosition()[1]);
-            } else {
-                // Handle the case when the user clicks an empty cell without a selected piece
-                System.out.println("No piece selected or invalid piece selected.");
-            }
-        } else {
-            // If a piece is already selected, this click represents a target move
-            targetMove = new int[]{row, col};
-            System.out.println("TARGET MOVE: " + targetMove[0] + " " + targetMove[1]);
-            player.setMoveToMake(targetMove);
-        }
-        player.makeMove(board);
-        // Update the game board based on the logic board
-        updateBoardScreen(board);
-
-    }
-
-
 
     private void updateBoardScreen (Board board){
         Piece[][] updatedGrid = board.getGrid();
