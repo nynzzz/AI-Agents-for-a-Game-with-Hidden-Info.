@@ -97,12 +97,19 @@ public class RandomPlayer implements Player{
                 int[] forward = {piecePosition[0] - 1, piecePosition[1]};
                 // if there is no white piece in the forward move or its null
                 if(board.getGrid()[forward[0]][forward[1]] == null || !Objects.equals(board.getGrid()[forward[0]][forward[1]].getColor(), "white")){
+//                    System.out.println("MOVE ADDED TO VALID MOVES FOR WHITE");
                     validMoves.add(forward);
                 }
 //                // if there is a black piece in the forward move with hidden (false) status
 //                else if(board.getGrid()[forward[0]][forward[1]].getStatus() == false){
 //                    validMoves.add(forward);
 //                }
+                // if there is a black piece in the forward move with reviled (true) status
+                if(board.getGrid()[forward[0]][forward[1]] != null && (board.getGrid()[forward[0]][forward[1]].getColor().equals("black") && board.getGrid()[forward[0]][forward[1]].getStatus())){
+                    // do not add it to valid moves and continue
+//                    System.out.println("HERE FOR WHITE");
+                    validMoves.remove(forward);
+                }
             }
         }
 
@@ -136,6 +143,12 @@ public class RandomPlayer implements Player{
 //                else if(board.getGrid()[forward[0]][forward[1]].getStatus() == false){
 //                    validMoves.add(forward);
 //                }
+                // if there is a white piece in the forward move with reviled (true) status
+                if(board.getGrid()[forward[0]][forward[1]] != null && (board.getGrid()[forward[0]][forward[1]].getColor().equals("white") && board.getGrid()[forward[0]][forward[1]].getStatus())){
+                    // do not add it to valid moves and continue
+//                    System.out.println("HERE FOR BLACK");
+                    validMoves.remove(forward);
+                }
             }
         }
         return validMoves;
