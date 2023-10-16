@@ -129,134 +129,134 @@ public class GameScreen {
                     HumanPlayer blackPlayer = new HumanPlayer("black");
                     cellButton.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
-                        public void handle(ActionEvent event) {
+                        public void handle(ActionEvent event){
 
                             if(!isFinished)
-                            if (selectedPiece == null) {
-                                // Assign this piece as pieceToMove for the current player
-                                if (isWhiteTurn) {
-                                    selectedPiece = grid[finalRow][finalCol];
-                                    whitePlayer.setPieceToMove(selectedPiece);
-                                    System.out.println("white player piece to move: " + Arrays.toString(whitePlayer.getPieceToMove().getPosition()));
+                                if (selectedPiece == null) {
+                                    // Assign this piece as pieceToMove for the current player
+                                    if (isWhiteTurn) {
+                                        selectedPiece = grid[finalRow][finalCol];
+                                        whitePlayer.setPieceToMove(selectedPiece);
+                                        System.out.println("white player piece to move: " + Arrays.toString(whitePlayer.getPieceToMove().getPosition()));
+                                    } else {
+                                        selectedPiece = grid[finalRow][finalCol];
+                                        blackPlayer.setPieceToMove(selectedPiece);
+                                        System.out.println("black player piece to move: " + Arrays.toString(blackPlayer.getPieceToMove().getPosition()));
+                                    }
                                 } else {
-                                    selectedPiece = grid[finalRow][finalCol];
-                                    blackPlayer.setPieceToMove(selectedPiece);
-                                    System.out.println("black player piece to move: " + Arrays.toString(blackPlayer.getPieceToMove().getPosition()));
-                                }
-                            } else {
-                                if (isWhiteTurn) {
-                                    whitePlayer.setMoveToMake(new int[]{finalRow, finalCol});
-                                    System.out.println("white player move to make: " + Arrays.toString(whitePlayer.getMoveToMake()));
+                                    if (isWhiteTurn) {
+                                        whitePlayer.setMoveToMake(new int[]{finalRow, finalCol});
+                                        System.out.println("white player move to make: " + Arrays.toString(whitePlayer.getMoveToMake()));
 
-                                    System.out.println("PIECE " + Arrays.toString(whitePlayer.getPieceToMove().getPosition()));
-                                    System.out.println("MOVE " + Arrays.toString(whitePlayer.getMoveToMake()));
+                                        System.out.println("PIECE " + Arrays.toString(whitePlayer.getPieceToMove().getPosition()));
+                                        System.out.println("MOVE " + Arrays.toString(whitePlayer.getMoveToMake()));
 
-                                    whitePlayer.makeMove(board);
-                                    updateBoardScreen(board);
+                                        whitePlayer.makeMove(board);
+                                        updateBoardScreen(board);
 
-                                    // white reveals black
-                                    if(whitePlayer.moveType.equals("reveal"))
-                                    {
-                                        int x = whitePlayer.getPieceToMove().getPosition()[0]-1;
-                                        int y = whitePlayer.getPieceToMove().getPosition()[1]; // Assuming forward is +1 in the column direction. Adjust if necessary.
-                                        revealArray.add(grid[y][x]);
-                                    }
-
-                                    selectedPiece = null;
-                                    isWhiteTurn = !isWhiteTurn;
-                                    System.out.println("white player made a move");
-
-                                    for (Node node : gameBoard.getChildren())
-                                    {
-                                        if (node instanceof Button)
+                                        // white reveals black
+                                        if(whitePlayer.moveType.equals("reveal"))
                                         {
-                                            Button button = (Button) node;
-                                            ImageView imgView = (ImageView)button.getGraphic();
-                                            if (imgView != null && imgView.getImage() == whitePawnImage)
-                                            {
-                                                button.setDisable(true);
-                                            }
-                                        }
-                                    }
-
-                                    if(whitePlayer.getMoveToMake()[0] == 0)
-                                    {
-                                        for (Node node : gameBoard.getChildren())
-                                        {
-                                            if (node instanceof Button)
-                                            {
-                                                Button button = (Button) node ;
-                                                ImageView imgView = (ImageView)button.getGraphic();
-                                                imgView.setVisible(true);
-                                            }
+                                            int x = whitePlayer.getPieceToMove().getPosition()[0]-1;
+                                            int y = whitePlayer.getPieceToMove().getPosition()[1]; // Assuming forward is +1 in the column direction. Adjust if necessary.
+                                            revealArray.add(grid[y][x]);
                                         }
 
-                                        isFinished = true ;
-                                        Alert win = new Alert(Alert.AlertType.INFORMATION);
-                                        win.setContentText("Player " + whitePlayer.getColor() + " has won!");
-                                        win.setTitle("Game finished");
-                                        win.showAndWait();
-                                        gameTimer.stop();
-
-                                    }
-
-                                } else {
-                                    blackPlayer.setMoveToMake(new int[]{finalRow, finalCol});
-                                    System.out.println("black player move to make: " + Arrays.toString(blackPlayer.getMoveToMake()));
-
-                                    System.out.println("PIECE " + Arrays.toString(blackPlayer.getPieceToMove().getPosition()));
-                                    System.out.println("MOVE " + Arrays.toString(blackPlayer.getMoveToMake()));
-
-                                    blackPlayer.makeMove(board);
-                                    updateBoardScreen(board);
-
-                                    //black reveals white
-                                    if(blackPlayer.moveType.equals("reveal"))
-                                    {
-                                        int x = blackPlayer.getPieceToMove().getPosition()[0] +1;
-                                        int y = blackPlayer.getPieceToMove().getPosition()[1] ; // Assuming forward is -1 in the column direction for the black player. Adjust if necessary.
-                                        revealArray.add(grid[x][y]);
-                                    }
-
-                                    selectedPiece = null;
-                                    isWhiteTurn = !isWhiteTurn;
-                                    System.out.println("black player made a move");
-
-                                    for (Node node : gameBoard.getChildren())
-                                    {
-                                        if (node instanceof Button)
-                                        {
-                                            Button button = (Button) node;
-                                            ImageView imgView = (ImageView)button.getGraphic();
-                                            if (imgView != null && imgView.getImage() == blackPawnImage)
-                                            {
-                                                button.setDisable(true);
-                                            }
-                                        }
-                                    }
-
-                                    if(blackPlayer.getMoveToMake()[0] == 7)
-                                    {
+                                        selectedPiece = null;
+                                        isWhiteTurn = !isWhiteTurn;
+                                        System.out.println("white player made a move");
 
                                         for (Node node : gameBoard.getChildren())
                                         {
                                             if (node instanceof Button)
                                             {
-                                                Button button = (Button) node ;
+                                                Button button = (Button) node;
                                                 ImageView imgView = (ImageView)button.getGraphic();
-                                                imgView.setVisible(true);
+                                                if (imgView != null && imgView.getImage() == whitePawnImage)
+                                                {
+                                                    button.setDisable(true);
+                                                }
                                             }
                                         }
 
-                                        isFinished = true ;
-                                        Alert win = new Alert(Alert.AlertType.INFORMATION);
-                                        win.setContentText("Player " + blackPlayer.getColor() + " has won!");
-                                        win.setTitle("Game finished");
-                                        win.showAndWait();
-                                        gameTimer.stop();
+                                        if(whitePlayer.getMoveToMake()[0] == 0)
+                                        {
+                                            for (Node node : gameBoard.getChildren())
+                                            {
+                                                if (node instanceof Button)
+                                                {
+                                                    Button button = (Button) node ;
+                                                    ImageView imgView = (ImageView)button.getGraphic();
+                                                    imgView.setVisible(true);
+                                                }
+                                            }
+
+                                            isFinished = true ;
+                                            Alert win = new Alert(Alert.AlertType.INFORMATION);
+                                            win.setContentText("Player " + whitePlayer.getColor() + " has won!");
+                                            win.setTitle("Game finished");
+                                            win.showAndWait();
+                                            gameTimer.stop();
+
+                                        }
+
+                                    } else {
+                                        blackPlayer.setMoveToMake(new int[]{finalRow, finalCol});
+                                        System.out.println("black player move to make: " + Arrays.toString(blackPlayer.getMoveToMake()));
+
+                                        System.out.println("PIECE " + Arrays.toString(blackPlayer.getPieceToMove().getPosition()));
+                                        System.out.println("MOVE " + Arrays.toString(blackPlayer.getMoveToMake()));
+
+                                        blackPlayer.makeMove(board);
+                                        updateBoardScreen(board);
+
+                                        //black reveals white
+                                        if(blackPlayer.moveType.equals("reveal"))
+                                        {
+                                            int x = blackPlayer.getPieceToMove().getPosition()[0] +1;
+                                            int y = blackPlayer.getPieceToMove().getPosition()[1] ; // Assuming forward is -1 in the column direction for the black player. Adjust if necessary.
+                                            revealArray.add(grid[x][y]);
+                                        }
+
+                                        selectedPiece = null;
+                                        isWhiteTurn = !isWhiteTurn;
+                                        System.out.println("black player made a move");
+
+                                        for (Node node : gameBoard.getChildren())
+                                        {
+                                            if (node instanceof Button)
+                                            {
+                                                Button button = (Button) node;
+                                                ImageView imgView = (ImageView)button.getGraphic();
+                                                if (imgView != null && imgView.getImage() == blackPawnImage)
+                                                {
+                                                    button.setDisable(true);
+                                                }
+                                            }
+                                        }
+
+                                        if(blackPlayer.getMoveToMake()[0] == 7)
+                                        {
+
+                                            for (Node node : gameBoard.getChildren())
+                                            {
+                                                if (node instanceof Button)
+                                                {
+                                                    Button button = (Button) node ;
+                                                    ImageView imgView = (ImageView)button.getGraphic();
+                                                    imgView.setVisible(true);
+                                                }
+                                            }
+
+                                            isFinished = true ;
+                                            Alert win = new Alert(Alert.AlertType.INFORMATION);
+                                            win.setContentText("Player " + blackPlayer.getColor() + " has won!");
+                                            win.setTitle("Game finished");
+                                            win.showAndWait();
+                                            gameTimer.stop();
+                                        }
                                     }
                                 }
-                            }
 
                         }
                     });
@@ -362,9 +362,9 @@ public class GameScreen {
                             imgView.setVisible(true);
                         }else{
                             // Check the color of the piece on the logical board
-                            if ((piece.getColor().equals("white") && isWhiteTurn) || (piece.getColor().equals("black") && piece.getStatus() && isWhiteTurn)) {
+                            if (piece.getColor().equals("white") && isWhiteTurn) {
                                 imgView.setVisible(true);
-                            } else if ((piece.getColor().equals("black") && !isWhiteTurn) || (piece.getColor().equals("white") && piece.getStatus() && !isWhiteTurn)) {
+                            } else if (piece.getColor().equals("black") && !isWhiteTurn) {
                                 imgView.setVisible(true);
                             } else{
                                 imgView.setVisible(false);

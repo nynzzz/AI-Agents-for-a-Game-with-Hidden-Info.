@@ -116,7 +116,7 @@ public class MainScreen_new extends Application {
     }
 
     // method to start the game
-    private void startGame(String player1Type, String player2Type) {
+    private void startGame(String player1Type, String player2Type){
         System.out.println("Starting the game with Player 1: " + player1Type + " and Player 2: " + player2Type);
 
         // Create a new stage for the game screen

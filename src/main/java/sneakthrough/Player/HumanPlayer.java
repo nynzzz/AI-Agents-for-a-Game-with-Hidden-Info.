@@ -1,5 +1,6 @@
 package sneakthrough.Player;
 
+import javafx.scene.control.Alert;
 import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Piece;
 
@@ -103,8 +104,19 @@ public class HumanPlayer implements Player{
         }
         else{
             // ask the human player to select a move
-//            System.out.println("This move is not valid !!!");
+            //System.out.println("This move is not valid !!!");
+
+//            if(!isValidMove(board,piece,move))
+//            {
+//                Alert invalidMove = new Alert(Alert.AlertType.ERROR);
+//                invalidMove.setTitle("Error");
+//                invalidMove.setHeaderText(null);
+//                invalidMove.setContentText("Invalid move : try diagonally or orthogonally");
+//                invalidMove.showAndWait();
+//            }
+//            else makeMove(board);
             makeMove(board);
+
         }
     }
 
