@@ -1,0 +1,88 @@
+@startuml
+skinparam packageStyle rect
+skinparam linetype ortho
+
+' Positioning core classes in a horizontal fashion
+package "Core" {
+    class RandomExp
+    RandomExp -right-> Game
+    class Game
+    Game -right-> Board
+    class Board
+    class Piece
+}
+
+' Positioning UI classes in a horizontal fashion
+package "UI" {
+    class Main
+    Main -right-> MainScreen_new
+    class MainScreen_new
+    MainScreen_new -right-> GameScreen
+    class GameScreen
+}
+
+' Positioning player classes
+interface Player
+class HumanPlayer
+class RandomPlayer
+
+' Relationships
+Game <-- GameScreen
+Game <-- HumanPlayer
+Game <-- RandomPlayer
+Piece <-down-> Board
+
+Player <|-- HumanPlayer
+Player <|-- RandomPlayer
+
+' Definitions
+class RandomExp {
+    main()
+}
+
+class GameScreen {
+    start(gameStage, player1Type, player2Type)
+    updateTimerLabel()
+    updateBoardScreen(board)
+}
+
+class MainScreen_new {
+    start(primaryStage)
+    startGame(player1Type, player2Type)
+    showPlayerSelectionErrorDialog()
+}
+
+class Board {
+    Board()
+    initializeBoard()
+    setGrid(grid)
+    setSize()
+    removeCapturedPiece(piece)
+}
+
+class Game {
+    Game(board, player1, player2)
+    startGame()
+    startGameExperiments()
+    isGameOver()
+}
+
+class HumanPlayer {
+    makeMove(board)
+    isValidMove(board, piece, move)
+    isCaptureMove(board, piece, move)
+    isRevealMove(board ,piece ,move)
+}
+
+class RandomPlayer {
+    makeMove(board)
+    isCaptureMove(board, piece, move)
+    isRevealMove(board ,piece ,move)
+    getRandomMove(validMoves)
+    getRandomPiece(pieces)
+}
+
+class Main {
+}
+
+@enduml
