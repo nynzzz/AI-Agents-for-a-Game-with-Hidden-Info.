@@ -29,6 +29,4 @@ public class Piece {
     public void setPosition(int[] position) {
         this.position = position;
     }
-
-
 }

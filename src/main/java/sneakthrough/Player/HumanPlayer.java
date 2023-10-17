@@ -43,28 +43,19 @@ public class HumanPlayer implements Player{
     // ------//
     @Override
     public void makeMove(Board board) {
-        // ask the human player to select a piece to move
-        //Piece piece = selectPiece(board);
+
         Piece piece = pieceToMove;
-//        if(piece == null){
-//            // ask the human player to select a move
-////            System.out.println("There is no piece at this (i,j) !!!");
-////            piece = selectPiece(board);
-//        }
-        // ask the human player to select a move
-        //int[] move = selectMove();
         int[] move = moveToMake;
 
         // check if move is valid
         if(isValidMove(board, piece, move)){
 
-            //print valid moves
-            System.out.println("Valid moves are : ");
-            ArrayList<int[]> validMoves = getValidMoves(board, piece);
-            for(int[] validMove : validMoves){
-                System.out.println(validMove[0] + "," + validMove[1]);
-            }
-
+//            //print valid moves
+//            System.out.println("Valid moves are : ");
+//            ArrayList<int[]> validMoves = getValidMoves(board, piece);
+//            for(int[] validMove : validMoves){
+//                System.out.println(validMove[0] + "," + validMove[1]);
+//            }
 
             // check if move is a capture
             if(isCaptureMove(board, piece, move)){
@@ -103,20 +94,7 @@ public class HumanPlayer implements Player{
             }
         }
         else{
-            // ask the human player to select a move
-            //System.out.println("This move is not valid !!!");
-
-//            if(!isValidMove(board,piece,move))
-//            {
-//                Alert invalidMove = new Alert(Alert.AlertType.ERROR);
-//                invalidMove.setTitle("Error");
-//                invalidMove.setHeaderText(null);
-//                invalidMove.setContentText("Invalid move : try diagonally or orthogonally");
-//                invalidMove.showAndWait();
-//            }
-//            else makeMove(board);
             makeMove(board);
-
         }
     }
 
@@ -159,7 +137,6 @@ public class HumanPlayer implements Player{
                 // if there is a black piece in the forward move with reviled (true) status
                 if(board.getGrid()[forward[0]][forward[1]] != null && (board.getGrid()[forward[0]][forward[1]].getColor().equals("black") && board.getGrid()[forward[0]][forward[1]].getStatus())){
                     // do not add it to valid moves and continue
-//                    System.out.println("HERE FOR WHITE");
                     validMoves.remove(forward);
                 }
             }
@@ -198,7 +175,6 @@ public class HumanPlayer implements Player{
                 // if there is a white piece in the forward move with reviled (true) status
                 if(board.getGrid()[forward[0]][forward[1]] != null && (board.getGrid()[forward[0]][forward[1]].getColor().equals("white") && board.getGrid()[forward[0]][forward[1]].getStatus())){
                     // do not add it to valid moves and continue
-//                    System.out.println("HERE FOR BLACK");
                     validMoves.remove(forward);
                 }
             }

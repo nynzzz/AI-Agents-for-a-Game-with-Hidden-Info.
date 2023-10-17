@@ -39,6 +39,7 @@ public class Game {
         }
     }
 
+    // ----------------------------- //
     // EXPERIMENTS METHOD, DONT USE //
     public String startGameExperiments() {
         while (!isGameOver()) {
