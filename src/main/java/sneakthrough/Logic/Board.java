@@ -35,6 +35,30 @@ public class Board {
         }
     }
 
+    public int whitePiecesLeft(){
+        int whitePiecesLeft = 0;
+        for (int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++){
+                if(grid[i][j] != null && grid[i][j].getColor().equals("white")){
+                    whitePiecesLeft++;
+                }
+            }
+        }
+        return whitePiecesLeft;
+    }
+
+    public int blackPiecesLeft(){
+        int blackPiecesLeft = 0;
+        for (int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++){
+                if(grid[i][j] != null && grid[i][j].getColor().equals("black")){
+                    blackPiecesLeft++;
+                }
+            }
+        }
+        return blackPiecesLeft;
+    }
+
     public void printBoard(){
         for (int i = 0; i < size; i++) {
             for(int j = 0; j < size; j++){

@@ -97,7 +97,6 @@ public class RandomPlayer implements Player{
                 int[] forward = {piecePosition[0] - 1, piecePosition[1]};
                 // if there is no white piece in the forward move or its null
                 if(board.getGrid()[forward[0]][forward[1]] == null || !Objects.equals(board.getGrid()[forward[0]][forward[1]].getColor(), "white")){
-//                    System.out.println("MOVE ADDED TO VALID MOVES FOR WHITE");
                     validMoves.add(forward);
                 }
 //                // if there is a black piece in the forward move with hidden (false) status
@@ -107,7 +106,6 @@ public class RandomPlayer implements Player{
                 // if there is a black piece in the forward move with reviled (true) status
                 if(board.getGrid()[forward[0]][forward[1]] != null && (board.getGrid()[forward[0]][forward[1]].getColor().equals("black") && board.getGrid()[forward[0]][forward[1]].getStatus())){
                     // do not add it to valid moves and continue
-//                    System.out.println("HERE FOR WHITE");
                     validMoves.remove(forward);
                 }
             }
@@ -146,7 +144,6 @@ public class RandomPlayer implements Player{
                 // if there is a white piece in the forward move with reviled (true) status
                 if(board.getGrid()[forward[0]][forward[1]] != null && (board.getGrid()[forward[0]][forward[1]].getColor().equals("white") && board.getGrid()[forward[0]][forward[1]].getStatus())){
                     // do not add it to valid moves and continue
-//                    System.out.println("HERE FOR BLACK");
                     validMoves.remove(forward);
                 }
             }
@@ -178,6 +175,27 @@ public class RandomPlayer implements Player{
         int randomIndex = (int) (Math.random() * validMoves.size());
         return validMoves.get(randomIndex);
     }
+
+    //check if player has reached the other side
+   public boolean hasWon(Board board){
+        //if player is white
+        if(this.color.equals("white")){
+            for(int i = 0; i < board.getSize(); i++){
+                if(board.getGrid()[0][i] != null && board.getGrid()[0][i].getColor().equals("white")){
+                    return true;
+                }
+            }
+        }
+        //if player is black
+        else{
+            for(int i = 0; i < board.getSize(); i++){
+                if(board.getGrid()[board.getSize() - 1][i] != null && board.getGrid()[board.getSize() - 1][i].getColor().equals("black")){
+                    return true;
+                }
+            }
+        }
+        return false;
+   }
 
     // method to check if a move is a capture
     public boolean isCaptureMove(Board board, Piece piece, int[] move){
