@@ -48,7 +48,7 @@ public class HumanPlayer implements Player{
         int[] move = moveToMake;
 
         // check if move is valid
-        if(isValidMove(board, piece, move)){
+        if(piece.isValidMove(board, move)){
 
 //            //print valid moves
 //            System.out.println("Valid moves are : ");
@@ -58,7 +58,7 @@ public class HumanPlayer implements Player{
 //            }
 
             // check if move is a capture
-            if(isCaptureMove(board, piece, move)){
+            if(piece.isCaptureMove(board, move)){
                 System.out.println("Its a capture move");
                 moveType = "capture";
                 Piece capturedPiece = board.getGrid()[move[0]][move[1]];
@@ -74,7 +74,7 @@ public class HumanPlayer implements Player{
                 piece.setStatus(true);
             }
             // check if move is a reveal move
-            else if(isRevealMove(board, piece, move)){
+            else if(piece.isRevealMove(board, move)){
                 System.out.println("Its a reveal move");
                 moveType = "reveal" ;
                 // reveal piece of the opponent
@@ -98,191 +98,7 @@ public class HumanPlayer implements Player{
         }
     }
 
-    public ArrayList<int[]> getValidMoves(Board board, Piece piece){
-        String pieceColor = piece.getColor();
-        int[] piecePosition = piece.getPosition();
-        ArrayList<int[]> validMoves = new ArrayList<int[]>();
-
-        // if piece is white
-        if(pieceColor.equals("white")){
-            // there are 3 options to move, 2 diagonals and 1 forward, check if they dont exceed the board
-            //left diagonal
-            if(piecePosition[0] - 1 >= 0 && piecePosition[1] - 1 >= 0){
-                int[] leftDiagonal = {piecePosition[0] - 1, piecePosition[1] - 1};
-                // if there is no white piece in the left diagonal or its null
-                if(board.getGrid()[leftDiagonal[0]][leftDiagonal[1]] == null || !Objects.equals(board.getGrid()[leftDiagonal[0]][leftDiagonal[1]].getColor(), "white")){
-                    validMoves.add(leftDiagonal);
-                }
-            }
-            //right diagonal
-            if(piecePosition[0] - 1 >= 0 && piecePosition[1] + 1 < board.getSize()){
-                int[] rightDiagonal = {piecePosition[0] - 1, piecePosition[1] + 1};
-                // if there is no white piece in the right diagonal or its null
-                if(board.getGrid()[rightDiagonal[0]][rightDiagonal[1]] == null || !Objects.equals(board.getGrid()[rightDiagonal[0]][rightDiagonal[1]].getColor(), "white")){
-                    validMoves.add(rightDiagonal);
-                }
-            }
-            //forward
-            if(piecePosition[0] - 1 >= 0){
-                int[] forward = {piecePosition[0] - 1, piecePosition[1]};
-                // if there is no white piece in the forward move or its null
-                if(board.getGrid()[forward[0]][forward[1]] == null || !Objects.equals(board.getGrid()[forward[0]][forward[1]].getColor(), "white")){
-//                    System.out.println("MOVE ADDED TO VALID MOVES FOR WHITE");
-                    validMoves.add(forward);
-                }
-//                // if there is a black piece in the forward move with hidden (false) status
-//                else if(board.getGrid()[forward[0]][forward[1]].getStatus() == false){
-//                    validMoves.add(forward);
-//                }
-                // if there is a black piece in the forward move with reviled (true) status
-                if(board.getGrid()[forward[0]][forward[1]] != null && (board.getGrid()[forward[0]][forward[1]].getColor().equals("black") && board.getGrid()[forward[0]][forward[1]].getStatus())){
-                    // do not add it to valid moves and continue
-                    validMoves.remove(forward);
-                }
-            }
-        }
-
-        // if piece is black
-        else{
-            // there are 3 options to move, 2 diagonals and 1 forward, check if they dont exceed the board
-            //left diagonal
-            if(piecePosition[0] + 1 < board.getSize() && piecePosition[1] - 1 >= 0){
-                int[] leftDiagonal = {piecePosition[0] + 1, piecePosition[1] - 1};
-                // if there is no black piece in the left diagonal or its null
-                if(board.getGrid()[leftDiagonal[0]][leftDiagonal[1]] == null || !Objects.equals(board.getGrid()[leftDiagonal[0]][leftDiagonal[1]].getColor(), "black") ){
-                    validMoves.add(leftDiagonal);
-                }
-            }
-            //right diagonal
-            if(piecePosition[0] + 1 < board.getSize() && piecePosition[1] + 1 < board.getSize()){
-                int[] rightDiagonal = {piecePosition[0] + 1, piecePosition[1] + 1};
-                // if there is no black piece in the right diagonal or its null
-                if(board.getGrid()[rightDiagonal[0]][rightDiagonal[1]] == null || !Objects.equals(board.getGrid()[rightDiagonal[0]][rightDiagonal[1]].getColor(), "black")){
-                    validMoves.add(rightDiagonal);
-                }
-            }
-            //forward
-            if(piecePosition[0] + 1 < board.getSize()){
-                int[] forward = {piecePosition[0] + 1, piecePosition[1]};
-                // if there is no black piece in the forward move or its null
-                if(board.getGrid()[forward[0]][forward[1]] == null || !Objects.equals(board.getGrid()[forward[0]][forward[1]].getColor(), "black")){
-                    validMoves.add(forward);
-                }
-//                // if there is a white piece in the forward move with hidden (false) status
-//                else if(board.getGrid()[forward[0]][forward[1]].getStatus() == false){
-//                    validMoves.add(forward);
-//                }
-                // if there is a white piece in the forward move with reviled (true) status
-                if(board.getGrid()[forward[0]][forward[1]] != null && (board.getGrid()[forward[0]][forward[1]].getColor().equals("white") && board.getGrid()[forward[0]][forward[1]].getStatus())){
-                    // do not add it to valid moves and continue
-                    validMoves.remove(forward);
-                }
-            }
-        }
-        return validMoves;
-    }
-
-    public boolean isValidMove(Board board, Piece piece, int[] move){
-        ArrayList<int[]> validMoves = getValidMoves(board, piece);
-        for(int[] validMove : validMoves){
-            if(validMove[0] == move[0] && validMove[1] == move[1]){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // pieces can capture opponent pieces by moving diagonally to the left or right. When a capture is made, the capturing piece is revealed to the opponent.
-    // method to check if a move is a capture
-    public boolean isCaptureMove(Board board, Piece piece, int[] move){
-        ArrayList<int[]> validMoves = getValidMoves(board, piece);
-        // first check if move is a valid diagonal move
-        for(int[] validMove : validMoves){
-            if(validMove[0] == move[0] && validMove[1] == move[1]){
-                // if move is valid, check if there is a piece to capture
-                // if piece is white
-                if(piece.getColor().equals("white")){
-                    // if move is left diagonal
-                    if(move[0] == piece.getPosition()[0] - 1 && move[1] == piece.getPosition()[1] - 1){
-                        // if there is a black piece to capture
-                        if(board.getGrid()[move[0]][move[1]] != null && board.getGrid()[move[0]][move[1]].getColor().equals("black")){
-                            return true;
-                        }
-                    }
-                    // if move is right diagonal
-                    else if(move[0] == piece.getPosition()[0] - 1 && move[1] == piece.getPosition()[1] + 1){
-                        // if there is a black piece to capture
-                        if(board.getGrid()[move[0]][move[1]] != null && board.getGrid()[move[0]][move[1]].getColor().equals("black")){
-                            return true;
-                        }
-                    }
-                }
-                // if piece is black
-                else if(piece.getColor().equals("black")){
-                    // if move is left diagonal
-                    if(move[0] == piece.getPosition()[0] + 1 && move[1] == piece.getPosition()[1] - 1){
-                        // if there is a white piece to capture
-                        if(board.getGrid()[move[0]][move[1]] != null && board.getGrid()[move[0]][move[1]].getColor().equals("white")){
-                            return true;
-                        }
-                    }
-                    // if move is right diagonal
-                    else if(move[0] == piece.getPosition()[0] + 1 && move[1] == piece.getPosition()[1] + 1){
-                        // if there is a white piece to capture
-                        if(board.getGrid()[move[0]][move[1]] != null && board.getGrid()[move[0]][move[1]].getColor().equals("white")){
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    //If an orthogonal move is attempted to a spot with a hidden piece of the opponent,
-    // the move is not completed and the enemy piece is revealed
-
-    // method to check if a move is an orthogonal move to a hidden piece
-    public boolean isRevealMove(Board board, Piece piece, int[] move){
-        ArrayList<int[]> validMoves = getValidMoves(board, piece);
-        // first check if move is a valid orthogonal move
-        for(int[] validMove : validMoves){
-            if(validMove[0] == move[0] && validMove[1] == move[1]){
-                // if move is valid, check if there is a hidden piece to reveal
-                // if piece is white
-                if(piece.getColor().equals("white")){
-                    // if move is forward
-                    if(move[0] == piece.getPosition()[0] - 1 && move[1] == piece.getPosition()[1]){
-                        // if there is no piece (null)
-                        if(board.getGrid()[move[0]][move[1]] == null){
-                            return false;
-                        }
-                        // if there is a black piece to reveal
-                        if(board.getGrid()[move[0]][move[1]].getColor().equals("black") && board.getGrid()[move[0]][move[1]].getStatus() == false){
-                            return true;
-                        }
-                    }
-                }
-                // if piece is black
-                else if(piece.getColor().equals("black")){
-                    // if move is forward
-                    if(move[0] == piece.getPosition()[0] + 1 && move[1] == piece.getPosition()[1]){
-                        // if there is no piece (null)
-                        if(board.getGrid()[move[0]][move[1]] == null){
-                            return false;
-                        }
-                        // if there is a white piece to reveal
-                        if(board.getGrid()[move[0]][move[1]].getColor().equals("white") && board.getGrid()[move[0]][move[1]].getStatus() == false){
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    //TODO: change with a method in UI
+    // this is if you wanna play in terminal
     // method that would ask a player to input the coordinates (i,j) of the piece they want to move
     public Piece selectPiece(Board board){
         Scanner scanner = new Scanner(System.in);
@@ -294,7 +110,6 @@ public class HumanPlayer implements Player{
         return board.getGrid()[i][j];
     }
 
-    //TODO: change with a method in UI
     // method that would ask a player to input the coordinates (i,j) of the move they want to make
     public int[] selectMove(){
         Scanner scanner = new Scanner(System.in);
