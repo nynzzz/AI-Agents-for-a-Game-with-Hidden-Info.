@@ -13,6 +13,21 @@ public class Board {
         initializeBoard();
     }
 
+    //copy constructor
+    public Board(Board board) {
+        this.size = board.size;
+        this.grid = new Piece[this.size][this.size];
+
+        for (int i = 0; i < this.size; i++) {
+            for (int j = 0; j < this.size; j++) {
+                if (board.grid[i][j] != null) {
+                    this.grid[i][j] = new Piece(board.grid[i][j]);
+                } else {
+                    this.grid[i][j] = null;
+                }
+            }
+        }
+    }
     private void initializeBoard() {
         // the first two and last two rows are filled with pieces
         for (int i = 0; i < size; i++) {
