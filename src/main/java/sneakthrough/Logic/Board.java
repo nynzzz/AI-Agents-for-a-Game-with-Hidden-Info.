@@ -3,6 +3,8 @@ package sneakthrough.Logic;
 import sneakthrough.Player.HumanPlayer;
 import sneakthrough.Player.Player;
 
+import java.util.ArrayList;
+
 public class Board {
     private Piece[][] grid;
     private int size;
@@ -110,5 +112,21 @@ public class Board {
     public void removeCapturedPiece(Piece piece){
         int[] position = piece.getPosition();
         grid[position[0]][position[1]] = null;
+    }
+
+    // get all pieces of a player color
+    public ArrayList<Piece> getPlayerPieces(String color){
+        ArrayList<Piece> playerPieces = new ArrayList<Piece>();
+        int index = 0;
+        for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                // if piece is not null and is of the player color
+                if(grid[i][j] != null && grid[i][j].getColor().equals(color)){
+                    playerPieces.add(grid[i][j]);
+                    index++;
+                }
+            }
+        }
+        return playerPieces;
     }
 }
