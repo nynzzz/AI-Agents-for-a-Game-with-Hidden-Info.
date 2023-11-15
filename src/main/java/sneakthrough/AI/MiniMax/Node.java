@@ -1,4 +1,4 @@
-package sneakthrough.MiniMax;
+package sneakthrough.AI.MiniMax;
 
 import sneakthrough.Logic.Board;
 
