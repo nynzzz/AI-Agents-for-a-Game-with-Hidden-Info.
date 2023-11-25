@@ -101,7 +101,10 @@ public class Node_ISMCTS {
         double bestUCT = -1.0;
 
         for (Node_ISMCTS child : this.children) {
-           if(possibleMoves.contains(child.getMove())){
+//            System.out.println("children size: " + this.children.size());
+//            System.out.println("child move: " + child.getMove()[0][0] + ", " + child.getMove()[0][1] + " --> " + child.getMove()[1][0] + ", " + child.getMove()[1][1]);
+           if(containsArray(possibleMoves, child.getMove())){
+//               System.out.println("here");
                 double UCT = calculateUCT(child, explorationRate);
                 if (UCT > bestUCT) {
                     bestUCT = UCT;
@@ -118,29 +121,65 @@ public class Node_ISMCTS {
         return ( node.getTotalScore() / node.getVisits() ) + ( explorationRate * Math.sqrt(Math.log(node.getConsiderations()) / node.getVisits()) );
     }
 
-    // a method to add a child to this node
-    public void addChild(int[][] move, String player) {
+    // a method to add a child to this node and return it
+    public Node_ISMCTS addChild(int[][] move, String player) {
         Node_ISMCTS child = new Node_ISMCTS(this, move, player);
         this.children.add(child);
+        return child;
     }
 
     // update method for backprop
-    public void update(String winnerPlayer,double score) {
+    public void update(String winnerPlayer) {
         this.visits++;
         if(winnerPlayer.equals(this.getPlayer())){
-            this.totalScore += score;
+            this.totalScore += 1;
         }
     }
 
     // print the node
     public String toString() {
       if(this.parent == null){
-        return "ROOT--PLAYER: " + this.getPlayer() + " MOVE: " + this.getMove()[0][0] + ", " + this.getMove()[0][1] + " --> " + this.getMove()[1][0] + ", " + this.getMove()[1][1] + " VISITS: " + this.getVisits() + " TOTAL_SCORE: " + this.getTotalScore();
+        return "ROOT--PLAYER: " + this.getPlayer() + " MOVE: " + "null" + ","+ " VISITS: " + this.getVisits() + " TOTAL_SCORE: " + this.getTotalScore();
       }
         else{
             return "PLAYER: " + this.getPlayer() + " MOVE: " + this.getMove()[0][0] + ", " + this.getMove()[0][1] + " --> " + this.getMove()[1][0] + ", " + this.getMove()[1][1] + " VISITS: " + this.getVisits() + " TOTAL_SCORE: " + this.getTotalScore();
         }
     }
+
+
+
+
+    // ---------helpers----------//
+
+    public boolean containsArray(ArrayList<int[][]> list, int[][] arrayToFind) {
+        for (int[][] array : list) {
+            if (arraysEqual(array, arrayToFind)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean arraysEqual(int[][] array1, int[][] array2) {
+        if (array1.length != array2.length) {
+            return false;
+        }
+
+        for (int i = 0; i < array1.length; i++) {
+            if (array1[i].length != array2[i].length) {
+                return false;
+            }
+
+            for (int j = 0; j < array1[i].length; j++) {
+                if (array1[i][j] != array2[i][j]) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 
 
 }

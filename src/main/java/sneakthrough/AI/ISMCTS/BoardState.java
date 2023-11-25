@@ -14,6 +14,7 @@ public class BoardState {
     private ArrayList<int[][]> possibleMoves;
     private boolean isGameOver;
     private String winner;
+    private int moveCount;
 
     public BoardState(Board board, String currentPlayer) {
         this.board = board;
@@ -22,6 +23,7 @@ public class BoardState {
         this.possibleMoves = findPossibleMoves(currentPlayer);
         this.isGameOver = board.isGameOver();
         this.winner = board.getWinner();
+        this.moveCount = 0;
     }
 
     public Piece[][] getGrid() {
@@ -41,7 +43,7 @@ public class BoardState {
     }
 
     public ArrayList<int[][]> getPossibleMoves() {
-        return this.possibleMoves;
+        return findPossibleMoves(this.currentPlayer);
     }
 
     public void setPossibleMoves(ArrayList<int[][]> possibleMoves) {
@@ -54,6 +56,14 @@ public class BoardState {
 
     public void setIsGameOver(boolean isGameOver) {
         this.isGameOver = isGameOver;
+    }
+
+    public int getMoveCount() {
+        return this.moveCount;
+    }
+
+    public void setMoveCount(int moveCount) {
+        this.moveCount = moveCount;
     }
 
     public String getWinner() {
@@ -75,6 +85,7 @@ public class BoardState {
 
         // update available moves
         this.possibleMoves = findPossibleMoves(this.currentPlayer);
+        this.moveCount++;
     }
 
     // method to get find available moves
@@ -93,6 +104,30 @@ public class BoardState {
         }
         return possibleMoves;
     }
+
+    // method to return opponents pieces
+    public ArrayList<Piece> getOpponentPieces(String currentPlayer) {
+        ArrayList<Piece> opponentPieces = new ArrayList<>();
+        for (int i = 0; i < this.grid.length; i++) {
+            for (int j = 0; j < this.grid.length; j++) {
+                Piece piece = this.grid[i][j];
+                if (piece != null && !piece.getColor().equals(currentPlayer)) {
+                    opponentPieces.add(piece);
+                }
+            }
+        }
+        return opponentPieces;
+    }
+
+//    public BoardState clone(){
+//        BoardState clone = new BoardState(this.board, this.currentPlayer);
+//        clone.setGrid(this.grid);
+//        clone.setPossibleMoves(this.possibleMoves);
+//        clone.setIsGameOver(this.isGameOver);
+//        clone.setWinner(this.winner);
+//        clone.setMoveCount(this.moveCount);
+//        return clone;
+//    }
 
 
 

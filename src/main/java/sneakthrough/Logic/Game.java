@@ -1,7 +1,7 @@
 package sneakthrough.Logic;
 
 import sneakthrough.Player.HumanPlayer;
-import sneakthrough.Player.MCTSPlayer;
+//import sneakthrough.Player.MCTSPlayer;
 import sneakthrough.Player.Player;
 import sneakthrough.Player.RandomPlayer;
 
@@ -137,11 +137,11 @@ public class Game {
 
 
     // main method to play the game in console
-    public static void main(String[] args) {
-        Board board = new Board();
-        Player player1 = new MCTSPlayer("white");
-        Player player2 = new RandomPlayer("black");
-        Game game = new Game(board,player1, player2);
-        game.startGame();
-    }
+//    public static void main(String[] args) {
+//        Board board = new Board();
+//        Player player1 = new MCTSPlayer("white");
+//        Player player2 = new RandomPlayer("black");
+//        Game game = new Game(board,player1, player2);
+//        game.startGame();
+//    }
 }
