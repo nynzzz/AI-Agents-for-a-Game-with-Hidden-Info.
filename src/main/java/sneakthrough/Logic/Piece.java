@@ -14,6 +14,13 @@ public class Piece {
         this.status = status;
         this.position = position;
     }
+    //copy constructor
+    public Piece(Piece piece) {
+        this.color = piece.color;
+        this.status = piece.status;
+        this.position = new int[] {piece.position[0], piece.position[1]};
+    }
+
     public String getColor() {
         return this.color;
     }
