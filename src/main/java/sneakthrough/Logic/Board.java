@@ -113,6 +113,11 @@ public class Board {
         return size;
     }
 
+    public Piece getPiece(int i, int j)
+    {
+        return grid[i][j] ;
+    }
+
     public void removeCapturedPiece(Piece piece){
         int[] position = piece.getPosition();
         grid[position[0]][position[1]] = null;
@@ -209,4 +214,28 @@ public class Board {
             return "none";
         }
     }
+    public Board clone()
+    {
+        Board clonedBoard = new Board(); // Create a new Board object
+            clonedBoard.size = this.size;
+            clonedBoard.numberWhiteTurns = this.numberWhiteTurns;
+            clonedBoard.numberBlackTurns = this.numberBlackTurns;
+
+            // Copy the grid state
+            clonedBoard.grid = new Piece[this.size][this.size];
+            for (int i = 0; i < this.size; i++) {
+                for (int j = 0; j < this.size; j++) {
+                    if (this.grid[i][j] != null) {
+                        clonedBoard.grid[i][j] = new Piece(this.grid[i][j]); // Copy the Piece objects
+                    } else {
+                        clonedBoard.grid[i][j] = null;
+                    }
+                }
+            }
+
+            return clonedBoard;
+    }
+
+
 }
+

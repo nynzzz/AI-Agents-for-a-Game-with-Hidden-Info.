@@ -1,9 +1,7 @@
 package sneakthrough.AI.MiniMax;
-
 import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Piece;
 import sneakthrough.Player.RandomPlayer;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +13,6 @@ public class MCS {
         Node root = new Node(null, board);
         List<Node> currentLevel = new ArrayList<>();
         currentLevel.add(root);
-
         String currentPlayerColor = startingColor;
 
         for (int i = 0; i < depth; i++) {
@@ -37,9 +34,6 @@ public class MCS {
         }
         System.out.println("Level " + level + ":");
         node.getState().printBoard();
-
-        //System.out.println("Number of children: " + node.getChildren().size());
-
         for (Node child : node.getChildren()) {
             printTree(child, level + 1);
         }
@@ -47,7 +41,6 @@ public class MCS {
 
     public List<Node> gameSimulations(Node node, String currentPlayerColor){
         List<Node> children = new ArrayList<>();
-
         for (int i = 0; i < childPerNode; i++) {
             Board stateOfBoard = new Board(node.getState());
             if (isGameOver(stateOfBoard)) {
@@ -65,8 +58,6 @@ public class MCS {
     public boolean isGameOver(Board stateOfBoard){
         boolean whiteWins = isWhiteWinner(stateOfBoard);
         boolean blackWins = isBlackWinner(stateOfBoard);
-
-        // either player reached the other side or has no pieces left
         return whiteWins || blackWins;
     }
 

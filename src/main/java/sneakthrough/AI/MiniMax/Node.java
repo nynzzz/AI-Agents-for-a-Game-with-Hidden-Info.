@@ -1,7 +1,5 @@
 package sneakthrough.AI.MiniMax;
-
 import sneakthrough.Logic.Board;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +8,10 @@ public class Node {
     private List<Node> children;
     private Board state;
 
-    public Node(Node parent, Board state){
+    public Node(Node parent, Board state)
+    {
         this.parent = parent;
-        this.children = new ArrayList<>();
+        this.children = new ArrayList<Node>();
         this.state = state;
     }
 
