@@ -35,9 +35,9 @@ public class ISMCTS {
         return this.iterLimit;
     }
 
-    public Node_ISMCTS runISMCTS(Node_ISMCTS rootNode){
+    public Node_ISMCTS runISMCTS(){
 
-        //Node_ISMCTS rootNode = new Node_ISMCTS(null, null, rootState.getCurrentPlayer());
+        Node_ISMCTS rootNode = new Node_ISMCTS(null, null, rootState.getCurrentPlayer());
 
         for (int i = 0; i < iterLimit; i++) {
 
@@ -221,17 +221,18 @@ public class ISMCTS {
     public static void main(String[] args){
         Board board = new Board();
         BoardState boardState = new BoardState(board, "white");
-        ISMCTS ismcts = new ISMCTS(boardState, 1000);
+        ISMCTS ismcts = new ISMCTS(boardState, 10000);
         Node_ISMCTS rootNode = new Node_ISMCTS(null, null, boardState.getCurrentPlayer());
 //        System.out.println("root node: " + rootNode.toString());
+        Node_ISMCTS newRoot= ismcts.runISMCTS();
 
-        int i = 50;
-        while (i > 0){
-            Node_ISMCTS newRoot= ismcts.runISMCTS(rootNode);
-            rootNode = newRoot;
-
-//            System.out.println("move: " + move[0][0] + move[0][1] + move[1][0] + move[1][1]);
-        }
+//        int i = 10;
+//        while (i > 0){
+//            Node_ISMCTS newRoot= ismcts.runISMCTS();
+//            rootNode = newRoot;
+//            i--;
+////            System.out.println("move: " + move[0][0] + move[0][1] + move[1][0] + move[1][1]);
+//        }
 
     }
 
