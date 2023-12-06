@@ -8,6 +8,8 @@ public class Node {
     private List<Node> children;
     private Board state;
 
+    private double winProbability;
+
     public Node(Node parent, Board state)
     {
         this.parent = parent;
@@ -17,6 +19,14 @@ public class Node {
 
     public Node getParent(){
         return parent;
+    }
+
+    public double getWinProbability() {
+        return winProbability;
+    }
+
+    public void setWinProbability(double winProbability) {
+        this.winProbability = winProbability;
     }
 
     public List<Node> getChildren(){

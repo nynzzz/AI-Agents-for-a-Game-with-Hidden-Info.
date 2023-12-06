@@ -1,13 +1,14 @@
 package sneakthrough.AI.MiniMax;
 import sneakthrough.Logic.Board;
+import sneakthrough.Logic.Game;
 import sneakthrough.Logic.Piece;
 import sneakthrough.Player.RandomPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MCS {
-    private static final int childPerNode= 1;
-    private static final int depth = 100;
+    private static final int childPerNode= 3;
+    private static final int depth = 3;
     public List<Node> gameSampling(Board board, String startingColor){
         List<Node> gameTree = new ArrayList<>();
         Node root = new Node(null, board);
@@ -29,11 +30,11 @@ public class MCS {
         return gameTree;
     }
     public void printTree(Node node, int level) {
-        for (int i = 0; i < level; i++) {
-            System.out.print("  ");
-        }
         System.out.println("Level " + level + ":");
         node.getState().printBoard();
+
+        System.out.println("Win Probability: " + node.getWinProbability());
+
         for (Node child : node.getChildren()) {
             printTree(child, level + 1);
         }
@@ -42,64 +43,44 @@ public class MCS {
     public List<Node> gameSimulations(Node node, String currentPlayerColor){
         List<Node> children = new ArrayList<>();
         for (int i = 0; i < childPerNode; i++) {
-            Board stateOfBoard = new Board(node.getState());
-            if (isGameOver(stateOfBoard)) {
+            Board stateOfBoard = node.getState().clone();
+            if (stateOfBoard.isGameOver()) {
                 break;
             }
             RandomPlayer randomPlayer = new RandomPlayer(currentPlayerColor);
             randomPlayer.makeMove(stateOfBoard);
-            Node child = new Node(node, new Board(stateOfBoard));
+            Node child = new Node(node, stateOfBoard.clone());
+
+            double winProbability = winProbability(stateOfBoard.clone(), "white", 5);
+            child.setWinProbability(winProbability);
+
             children.add(child);
         }
         return children;
     }
 
-
-    public boolean isGameOver(Board stateOfBoard){
-        boolean whiteWins = isWhiteWinner(stateOfBoard);
-        boolean blackWins = isBlackWinner(stateOfBoard);
-        return whiteWins || blackWins;
+    public  double winProbability(Board board, String color, int simulations){
+        int wins = 0;
+        for (int i = 0; i < simulations; i++) {
+            String winner = simulateGameForProb(board);
+            if (winner.equals(color)){
+                wins++;
+            }
+        }
+        return (double) wins / simulations;
     }
 
-    private boolean isWhiteWinner(Board board) {
-        int blackPiecesLeft = 0;
-        Piece[][] grid = board.getGrid();
-        // check if white has reached the other side
-        for (int i = 0; i < grid.length; i++) {
-            if (grid[0][i] != null && grid[0][i].getColor().equals("white")) {
-                return true;
-            }
-        }
-        // check if black has no pieces left
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid.length ; j++) {
-                if (grid[i][j] != null && grid[i][j].getColor().equals("black")) {
-                    blackPiecesLeft++;
-                }
-            }
-        }
-        return blackPiecesLeft == 0;
+    public String simulateGameForProb(Board board){
+        RandomPlayer white = new RandomPlayer("white");
+        RandomPlayer black = new RandomPlayer("black");
+
+        Board newBoard = board.clone();
+
+        Game game = new Game(newBoard, white, black);
+        String winner = game.startGameExperiments();
+        return winner;
     }
 
-    private boolean isBlackWinner(Board board) {
-        int whitePiecesLeft = 0;
-        Piece[][] grid = board.getGrid();
-        // check if black has reached the other side
-        for (int i = 0; i < grid.length; i++) {
-            if (grid[grid.length - 1][i] != null && grid[grid.length - 1][i].getColor().equals("black")) {
-                return true;
-            }
-        }
-        // check if white has no pieces left
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid.length ; j++) {
-                if (grid[i][j] != null && grid[i][j].getColor().equals("white")) {
-                    whitePiecesLeft++;
-                }
-            }
-        }
-        return whitePiecesLeft == 0;
-    }
 
     public static void main(String[] args) {
         Board board = new Board();
