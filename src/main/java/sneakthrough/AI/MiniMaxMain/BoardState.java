@@ -5,23 +5,25 @@ import sneakthrough.Logic.Piece;
 import java.util.ArrayList;
 
 public class BoardState {
-
     private Board board;
     private Piece[][] grid;
     private String currentPlayer;
     private ArrayList<int[][]> possibleMoves;
     private boolean isGameOver;
     private String winner;
-    private int moveCount;
+    
+    int size ;
+    
 
-    public BoardState(Board board, String currentPlayer) {
+    public BoardState(Board board, String currentPlayer)
+    {
         this.board = board;
         this.grid = board.getGrid();
         this.currentPlayer = currentPlayer;
         this.possibleMoves = findPossibleMoves(currentPlayer);
         this.isGameOver = board.isGameOver();
         this.winner = board.getWinner();
-        this.moveCount = 0;
+        this.size = 8 ;
     }
 
     public Piece[][] getGrid() {
@@ -56,14 +58,6 @@ public class BoardState {
         this.isGameOver = isGameOver;
     }
 
-    public int getMoveCount() {
-        return this.moveCount;
-    }
-
-    public void setMoveCount(int moveCount) {
-        this.moveCount = moveCount;
-    }
-
     public String getWinner() {
         return this.winner;
     }
@@ -72,8 +66,12 @@ public class BoardState {
         this.winner = winner;
     }
 
+    public int getSize() { return this.size;}
+
+    public Piece getPiece(int i, int j) { return this.grid[i][j];}
+
     // a method to do a move and update the available moves
-    public void doMove(int[][] move) {
+    public void makeMove(int[][] move) {
         int[] from = move[0];
         int[] to = move[1];
         Piece piece = this.grid[from[0]][from[1]];
@@ -83,7 +81,6 @@ public class BoardState {
 
         // update available moves
         this.possibleMoves = findPossibleMoves(this.currentPlayer);
-        this.moveCount++;
     }
 
     // method to get find available moves
@@ -117,16 +114,59 @@ public class BoardState {
         return opponentPieces;
     }
 
-//    public BoardState clone(){
-//        BoardState clone = new BoardState(this.board, this.currentPlayer);
-//        clone.setGrid(this.grid);
-//        clone.setPossibleMoves(this.possibleMoves);
-//        clone.setIsGameOver(this.isGameOver);
-//        clone.setWinner(this.winner);
-//        clone.setMoveCount(this.moveCount);
-//        return clone;
-//    }
+    public BoardState clone() {
+        // Create a deep clone of the board
+        Board clonedBoard = new Board(); // Assuming Board has a default constructor
 
+        // Clone the grid with deep copy of each Piece
+        Piece[][] clonedGrid = new Piece[this.size][this.size];
+        for (int i = 0; i < this.size; i++) {
+            for (int j = 0; j < this.size; j++) {
+                if (this.grid[i][j] != null) {
+                    // Assuming Piece has a suitable constructor or clone method
+                    clonedGrid[i][j] = new Piece(this.grid[i][j]);
+                } else {
+                    clonedGrid[i][j] = null;
+                }
+            }
+        }
 
+        // Set the cloned grid in the cloned board
+        clonedBoard.setGrid(clonedGrid);
+
+        // Create a new BoardState instance with the cloned board
+        BoardState clonedState = new BoardState(clonedBoard, this.currentPlayer);
+
+        // Clone other primitive or immutable fields
+        clonedState.isGameOver = this.isGameOver;
+        clonedState.winner = this.winner; // Assuming winner is a String or another immutable type
+        clonedState.size = this.size; // Assuming size is a primitive type
+
+        // You might need to clone other state variables here if they exist
+        // ...
+
+        return clonedState;
+    }
+
+    public void printBoard(){
+        for (int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++){
+                if(this.grid[i][j] == null){
+                    System.out.print("0"+ "  ");
+                }
+                else{
+                    // if piece is white
+                    if(this.grid[i][j].getColor().equals("white")){
+                        System.out.print("w"+ "  ");
+                    }
+                    // if piece is black
+                    else{
+                        System.out.print("b"+ "  ");
+                    }
+                }
+            }
+            System.out.println();
+        }
+    }
 
 }
