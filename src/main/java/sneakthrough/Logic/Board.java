@@ -5,7 +5,7 @@ import sneakthrough.Player.Player;
 
 import java.util.ArrayList;
 
-public class Board {
+public class Board{
     private Piece[][] grid;
     private int size;
     public int numberWhiteTurns;
@@ -34,6 +34,7 @@ public class Board {
             }
         }
     }
+
     private void initializeBoard() {
         // the first two and last two rows are filled with pieces
         for (int i = 0; i < size; i++) {
@@ -235,7 +236,6 @@ public class Board {
 
             return clonedBoard;
     }
-
 
 }
 
