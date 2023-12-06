@@ -11,7 +11,7 @@ public class MiniMax{
     // moved piece doesnt appear in the new possible board (getPossibleMoves)
     // problem is after having made a move, for that piece possible moves arent taken in consideration
 
-    public int[][] chooseBestMove(Board board, int depth,String player)
+    public int[][] chooseBestMove(BoardState state, int depth)
     {
         int bestValue = Integer.MIN_VALUE;
         int[][] bestMove = null ;
@@ -30,8 +30,8 @@ public class MiniMax{
 
 
         for (int[][] move : possibleMoves) {
-            Board newState = board.clone(); // Assuming a clone method in Board
-            makeMove(move, newState); // Assuming a method to apply moves to the board
+            BoardState newState = state.clone(); // Assuming a clone method in Board
+            newState.makeMove(move); // Assuming a method to apply moves to the board
 
             int moveValue = minimax(newState, depth - 1, false);
             if (moveValue > bestValue) {
@@ -72,29 +72,65 @@ public class MiniMax{
     }
 
     // Evaluate the board state based on Sneakthrough rules
-    private int evaluate(Board board, String player) {
-        int playerScore = 0;
-        int opponentScore = 0;
+    private int evaluate(BoardState state) {
+        int score = 0;
 
-        // Evaluate the board based on the position of the pieces
-        for (int i = 0; i < board.getSize(); i++) {
-            for (int j = 0; j < board.getSize(); j++) {
-                if(board.getPiece(i,j)!= null)
-                {
-                    String colorPiece = board.getPiece(i, j).getColor();
-                    if (colorPiece.equals(player)) {
-                        // Add points for player pieces based on their row (proximity to the opponent's side)
-                        playerScore += i;
-                    } else{
-                        opponentScore += (board.getSize() - 1 - i);
+        // Evaluate the progress of pieces towards the opponent's side
+        score += evaluatePieceProgress(state);
+
+        // Evaluate mobility and control of the board
+        score += evaluateMobilityAndControl(state);
+
+        return score;
+    }
+
+    // Evaluate the progress of the pieces towards the opponent's side
+    private int evaluatePieceProgress(BoardState state) {
+        int score = 0;
+        int boardSize = state.getSize();
+
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                Piece piece = state.getPiece(i, j);
+                if (piece != null && piece.getColor().equals(state.getCurrentPlayer())) {
+                    // Reward advancing towards the opponent's side
+                    int progressScore = (state.getCurrentPlayer().equals("white") ? (boardSize - i) : i);
+                    score += progressScore;
+
+                    // Keep some pieces for defense on the backline
+                    if ((state.getCurrentPlayer().equals("white") && i == 0) ||
+                            (state.getCurrentPlayer().equals("black") && i == boardSize - 1)) {
+                        score += 2; // Backline defense bonus
                     }
                 }
             }
         }
 
-        // Return the overall evaluation score (player's score - opponent's score)
-        return playerScore - opponentScore;
+        return score;
+    }
 
+    // Evaluate mobility and control of the board
+    private int evaluateMobilityAndControl(BoardState state) {
+        int score = 0;
+        ArrayList<int[][]> possibleMoves = state.getPossibleMoves();
+
+        for (int[][] move : possibleMoves) {
+            int[] from = move[0];
+            int[] to = move[1];
+
+            // Encourage forward movement
+            if ((state.getCurrentPlayer().equals("white") && to[0] > from[0]) ||
+                    (state.getCurrentPlayer().equals("black") && to[0] < from[0])) {
+                score += 1;
+            }
+
+            // Control of central columns
+            if (to[1] > 1 && to[1] < state.getSize() - 2) {
+                score += 1;
+            }
+        }
+
+        return score;
     }
 
     // Placeholder for applying a move to the board
@@ -128,21 +164,21 @@ public class MiniMax{
         for(int i = 0; i < 5 ; i++)
         {
 
-            bestMove = miniMax.chooseBestMove(board, depth, "white");
+            bestMove = miniMax.chooseBestMove(whiteState, depth);
             System.out.println("\nWHITE BEST MOVE TO MAKE: " + Arrays.deepToString(bestMove));
 
             // Apply the best move to the board
-            board = miniMax.makeMove(bestMove, board);
+            whiteState.makeMove(bestMove);
 
             // Print the updated game board after the AI's move
             System.out.println("\nUpdated Game Board after AI's Move WHITE:");
             whiteState.printBoard();
 
-            bestMoveBlack = miniMax.chooseBestMove(board, depth, "black");
+            bestMoveBlack = miniMax.chooseBestMove(blackState, depth);
             System.out.println("\nBLACK BEST MOVE TO MAKE: " + Arrays.deepToString(bestMoveBlack));
 
             // Apply the best move to the board
-            board = miniMax.makeMove(bestMoveBlack, board);
+            blackState.makeMove(bestMoveBlack);
 
             // Print the updated game board after the AI's move
             System.out.println("\nUpdated Game Board after AI's Move BLACK:");

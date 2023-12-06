@@ -71,7 +71,7 @@ public class BoardState {
     public Piece getPiece(int i, int j) { return this.grid[i][j];}
 
     // a method to do a move and update the available moves
-    public void doMove(int[][] move) {
+    public void makeMove(int[][] move) {
         int[] from = move[0];
         int[] to = move[1];
         Piece piece = this.grid[from[0]][from[1]];
