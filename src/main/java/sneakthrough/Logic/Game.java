@@ -1,7 +1,6 @@
 package sneakthrough.Logic;
 
 import sneakthrough.Player.HumanPlayer;
-//import sneakthrough.Player.MCTSPlayer;
 import sneakthrough.Player.ISMCTSPlayer;
 import sneakthrough.Player.Player;
 import sneakthrough.Player.RandomPlayer;

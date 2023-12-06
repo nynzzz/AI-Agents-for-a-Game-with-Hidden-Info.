@@ -148,10 +148,43 @@ public class BoardState {
     }
 
 
-    public boolean isWinningMove(int[][] move) {
-//        System.out.println("move: " + move[0][0] + move[0][1] + move[1][0] + move[1][1]);
-        return (this.currentPlayer.equals("white") && move[1][0] == 0) ||
-                (this.currentPlayer.equals("black") && move[1][0] == 7);
+    // method to check if there is a win condition, if yes return the move that leads to it
+    public int[][] makeWinningMoveIfExists(){
+        // if player is white, check if there is a white piece at row 1
+        if(this.currentPlayer.equals("white")) {
+            for (int i = 0; i < this.grid.length; i++) {
+                if (this.grid[1][i] != null && this.grid[1][i].getColor().equals("white")) {
+                    // check if there is a valid diagonal move to row 0
+                    ArrayList<int[]> validMoves = this.grid[1][i].getValidMoves(this.board);
+                    for (int[] move : validMoves) {
+                        if (move[0] == 0) {
+                            int[][] winningMove = new int[2][2];
+                            winningMove[0] = this.grid[1][i].getPosition();
+                            winningMove[1] = move;
+                            return winningMove;
+                        }
+                    }
+                }
+            }
+        }
+        // if player is black, check if there is a black piece at row 6
+        else{
+            for (int i = 0; i < this.grid.length; i++) {
+                if (this.grid[6][i] != null && this.grid[6][i].getColor().equals("black")) {
+                    // check if there is a valid diagonal move to row 7
+                    ArrayList<int[]> validMoves = this.grid[6][i].getValidMoves(this.board);
+                    for (int[] move : validMoves) {
+                        if (move[0] == 7) {
+                            int[][] winningMove = new int[2][2];
+                            winningMove[0] = this.grid[6][i].getPosition();
+                            winningMove[1] = move;
+                            return winningMove;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 
@@ -234,6 +267,7 @@ public class BoardState {
         for (Piece piece : pieces) {
             ArrayList<int[]> validMoves = piece.getValidMoves(this.board);
             for (int[] move : validMoves) {
+//                System.out.println("valid move: " + move[0] + move[1]);
                 int[][] possibleMove = new int[2][2];
                 possibleMove[0] = piece.getPosition();
                 possibleMove[1] = move;

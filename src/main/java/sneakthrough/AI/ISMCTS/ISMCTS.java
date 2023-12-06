@@ -44,28 +44,27 @@ public class ISMCTS {
 
             this.currentNode = rootNode;
 
+            int[][] winingMove = rootState.makeWinningMoveIfExists();
+            if(winingMove != null){
+                System.out.println("----------WINNING MOVE-----------");
+                System.out.println(Arrays.deepToString(winingMove));
+                Node_ISMCTS winningNode = new Node_ISMCTS(rootNode, winingMove, rootState.getCurrentPlayer());
+                return winningNode;
+            }
+
             this.currentState = rootState.determinize();
             this.possibleMoves = currentState.getPossibleMoves();
 
-            // print current state
+//            // print current state
+//            System.out.println("----------------DET BOARD------------------");
 //            currentState.StatetoString();
 
 
-            // print possible moves
+//            // print possible moves
 //            System.out.println("----------POSSIBLE MOVES-----------");
 //            for (int[][] move : possibleMoves) {
 //                System.out.println(Arrays.deepToString(move));
 //            }
-
-
-            // if possible move contains a move that leads to a win for the current player, return the node that leads to that move
-            for (int[][] move : possibleMoves) {
-                if (currentState.isWinningMove(move)) {
-                    Node_ISMCTS winningNode = new Node_ISMCTS(null, move, currentState.getCurrentPlayer());
-                    winningNode.setParent(rootNode);
-                    return winningNode;
-                }
-            }
 
             // selection
             selectChild();
@@ -143,14 +142,6 @@ public class ISMCTS {
 //        System.out.println("root node: " + rootNode.toString());
         Node_ISMCTS newRoot= ismcts.runISMCTS();
         System.out.println("parent: " + newRoot.getParent().toString());
-
-//        int i = 10;
-//        while (i > 0){
-//            Node_ISMCTS newRoot= ismcts.runISMCTS();
-//            rootNode = newRoot;
-//            i--;
-////            System.out.println("move: " + move[0][0] + move[0][1] + move[1][0] + move[1][1]);
-//        }
 
     }
 
