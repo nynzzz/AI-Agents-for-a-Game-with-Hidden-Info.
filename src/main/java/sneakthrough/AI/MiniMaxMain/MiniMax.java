@@ -16,9 +16,9 @@ public class MiniMax{
         int bestValue = Integer.MIN_VALUE;
         int[][] bestMove = null ;
 
-        ArrayList<int[][]> possibleMoves = board.getPossibleMoves(player); // Assuming a method to generate possible moves
+        ArrayList<int[][]> possibleMoves = state.getPossibleMoves(); // Assuming a method to generate possible moves
 
-        System.out.println(player + " Possible Moves: ");
+        System.out.println(state.getCurrentPlayer() + " possible moves: ");
         for (int[][] move : possibleMoves) {
             // Assuming each move array has two elements: the starting and ending position
             int[] startPos = move[0]; // Start position of the move
@@ -33,7 +33,7 @@ public class MiniMax{
             Board newState = board.clone(); // Assuming a clone method in Board
             makeMove(move, newState); // Assuming a method to apply moves to the board
 
-            int moveValue = minimax(newState, depth - 1, false,player);
+            int moveValue = minimax(newState, depth - 1, false);
             if (moveValue > bestValue) {
                 bestValue = moveValue;
                 bestMove = move;
@@ -44,28 +44,28 @@ public class MiniMax{
     }
 
     // The Minimax function
-    private int minimax(Board board, int depth, boolean isMaximizingPlayer, String player)
+    private int minimax(BoardState state, int depth, boolean isMaximizingPlayer)
     {
-        if (depth == 0 || board.isGameOver()) { // Assuming a method to check if game is over
-            return evaluate(board,player);
+        if (depth == 0 || state.getIsGameOver()) { // Assuming a method to check if game is over
+            return evaluate(state);
         }
 
         if (isMaximizingPlayer) {
             int bestValue = Integer.MIN_VALUE;
-            for (int[][] move : board.getPossibleMoves(player)) {
-                Board newState = board.clone();
-                makeMove(move,newState);
+            for (int[][] move : state.findPossibleMoves(state.getCurrentPlayer())) {
+                BoardState newState = state.clone();
+                newState.makeMove(move);
 
-                bestValue = Math.max(bestValue, minimax(newState, depth - 1, false,player));
+                bestValue = Math.max(bestValue, minimax(newState, depth - 1, false));
             }
             return bestValue;
         } else {
             int bestValue = Integer.MAX_VALUE;
-            for (int[][] move : board.getPossibleMoves(player)) {
-                Board newState = board.clone();
-                makeMove(move, newState);
+            for (int[][] move : state.findPossibleMoves(state.getCurrentPlayer())) {
+                BoardState newState = state.clone();
+                newState.makeMove(move);
 
-                bestValue = Math.min(bestValue, minimax(newState, depth - 1, true,player));
+                bestValue = Math.min(bestValue, minimax(newState, depth - 1, true));
             }
             return bestValue;
         }
@@ -97,26 +97,27 @@ public class MiniMax{
 
     }
 
-        // Placeholder for applying a move to the board
-        public Board makeMove(int[][] move, Board board) {
-
-            // Extract the source and destination coordinates for the move
-            int x1 = move[0][0];
-            int y1 = move[0][1];
-            int x2 = move[1][0];
-            int y2 = move[1][1];
-
-            // Move the piece from the source square to the destination square on the new board
-            Piece pieceToMove = board.getGrid()[x1][y1];
-            board.getGrid()[x2][y2] = pieceToMove;
-            board.getGrid()[x1][y1] = null;
-
-            return board;
-        }
+    // Placeholder for applying a move to the board
+//        public Board makeMove(int[][] move, Board board) {
+//
+//            // Extract the source and destination coordinates for the move
+//            int x1 = move[0][0];
+//            int y1 = move[0][1];
+//            int x2 = move[1][0];
+//            int y2 = move[1][1];
+//
+//            // Move the piece from the source square to the destination square on the new board
+//            Piece pieceToMove = board.getGrid()[x1][y1];
+//            board.getGrid()[x2][y2] = pieceToMove;
+//            board.getGrid()[x1][y1] = null;
+//
+//            return board;
+//        }
 
     public static void main(String[] args) {
         Board board = new Board();
-        //BoardState state = new BoardState(board, "white");
+        BoardState whiteState = new BoardState(board, "white");
+        BoardState blackState = new BoardState(board, "black");
 
         int depth = 3;
         MiniMax miniMax = new MiniMax();
@@ -135,7 +136,7 @@ public class MiniMax{
 
             // Print the updated game board after the AI's move
             System.out.println("\nUpdated Game Board after AI's Move WHITE:");
-            board.printBoard();
+            whiteState.printBoard();
 
             bestMoveBlack = miniMax.chooseBestMove(board, depth, "black");
             System.out.println("\nBLACK BEST MOVE TO MAKE: " + Arrays.deepToString(bestMoveBlack));
@@ -145,7 +146,7 @@ public class MiniMax{
 
             // Print the updated game board after the AI's move
             System.out.println("\nUpdated Game Board after AI's Move BLACK:");
-            board.printBoard();
+            blackState.printBoard();
 
         }
     }

@@ -89,7 +89,8 @@ public class Board {
         return blackPiecesLeft;
     }
 
-    public void printBoard(){
+    public void printBoard()
+    {
         for (int i = 0; i < size; i++) {
             for(int j = 0; j < size; j++){
                 if(grid[i][j] == null){
@@ -244,7 +245,6 @@ public class Board {
 
             return clonedBoard;
     }
-
 
 }
 
