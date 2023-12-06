@@ -11,12 +11,15 @@ public class Board {
     public int numberWhiteTurns;
     public int numberBlackTurns;
 
+    public int moveCount;
+
     public Board() {
         this.size = 8;
         this.grid = new Piece[size][size];
         initializeBoard();
         this.numberWhiteTurns = 0;
         this.numberBlackTurns = 0;
+        this.moveCount = 0;
     }
 
     //copy constructor
@@ -34,6 +37,12 @@ public class Board {
             }
         }
     }
+
+    public int getMoveCount() {
+        return moveCount;
+    }
+
+
     private void initializeBoard() {
         // the first two and last two rows are filled with pieces
         for (int i = 0; i < size; i++) {

@@ -34,6 +34,10 @@ public class RandomPlayer implements Player{
         }
         // get a random move from the valid moves
         int[] move = getRandomMove(validMoves);
+
+//        // print the move
+//        System.out.println("Move: " + piece.getPosition()[0] + piece.getPosition()[1] + " ---> " + move[0] + move[1]);
+
         // check if move is a capture
         if(piece.isCaptureMove(board, move)){
 //            System.out.println("Its a capture move");

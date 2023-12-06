@@ -23,7 +23,144 @@ public class BoardState {
         this.possibleMoves = findPossibleMoves(currentPlayer);
         this.isGameOver = board.isGameOver();
         this.winner = board.getWinner();
-        this.moveCount = 0;
+        this.moveCount = board.getMoveCount();
+    }
+
+
+    // determinization method for black. for moveCount times do a random move for black
+    public BoardState determinize() {
+
+        // create a copy of the grid
+        Piece[][] determinizedGrid = new Piece[this.grid.length][this.grid.length];
+        for (int i = 0; i < this.grid.length; i++) {
+            for (int j = 0; j < this.grid.length; j++) {
+                if (this.grid[i][j] != null) {
+                    determinizedGrid[i][j] = new Piece(this.grid[i][j]);
+                } else {
+                    determinizedGrid[i][j] = null;
+                }
+            }
+        }
+
+        // if the current player is white, keep white pieces at their current position and put black pieces at their starting position
+        if (this.currentPlayer.equals("white")) {
+            for (int i = 0; i < determinizedGrid.length; i++) {
+                for (int j = 0; j < determinizedGrid.length; j++) {
+                    if (determinizedGrid[i][j] != null && determinizedGrid[i][j].getColor().equals("black")) {
+                        // remove the piece from this position
+                        determinizedGrid[i][j] = null;
+                    }
+                }
+            }
+            // fill the first 2 rows with black pieces
+            for (int i = 0; i < determinizedGrid.length; i++) {
+                for (int j = 0; j < determinizedGrid.length; j++) {
+                    if (i < 2) {
+                        int[] position = {i, j};
+                        determinizedGrid[i][j] = new Piece("black", false, position);
+                    }
+                }
+            }
+
+            // create a new board with the determinized grid
+            Board determinizedBoard = new Board();
+            determinizedBoard.setGrid(determinizedGrid);
+
+            // for moveCount times do a random move for black
+            for (int i = 0; i < this.moveCount; i++) {
+                // get a random piece of black
+                ArrayList<Piece> blackPieces = determinizedBoard.getPlayerPieces("black");
+                int randomIndex = (int) (Math.random() * blackPieces.size());
+                Piece randomBlackPiece = blackPieces.get(randomIndex);
+                // get a random valid move for this piece
+                ArrayList<int[]> validMoves = randomBlackPiece.getValidMoves(determinizedBoard);
+                // while valid moves are empty, get a new random piece
+                while (validMoves.isEmpty()) {
+                    randomIndex = (int) (Math.random() * blackPieces.size());
+                    randomBlackPiece = blackPieces.get(randomIndex);
+                    validMoves = randomBlackPiece.getValidMoves(determinizedBoard);
+                }
+                // get a random move
+                int randomMoveIndex = (int) (Math.random() * validMoves.size());
+                int[] randomMove = validMoves.get(randomMoveIndex);
+                // do the move
+                int[] from = randomBlackPiece.getPosition();
+                int[] to = randomMove;
+                Piece piece = determinizedGrid[from[0]][from[1]];
+                determinizedGrid[from[0]][from[1]] = null;
+                determinizedGrid[to[0]][to[1]] = piece;
+                piece.setPosition(to);
+            }
+            return new BoardState(determinizedBoard, this.currentPlayer);
+        }
+
+        // if the current player is black, keep black pieces at their current position and put white pieces at their starting position
+        else {
+            for (int i = 0; i < determinizedGrid.length; i++) {
+                for (int j = 0; j < determinizedGrid.length; j++) {
+                    if (determinizedGrid[i][j] != null && determinizedGrid[i][j].getColor().equals("white")) {
+                        // remove the piece from this position
+                        determinizedGrid[i][j] = null;
+                    }
+                }
+            }
+            // fill the last 2 rows with white pieces
+            for (int i = 0; i < determinizedGrid.length; i++) {
+                for (int j = 0; j < determinizedGrid.length; j++) {
+                    if (i > 5) {
+                        int[] position = {i, j};
+                        determinizedGrid[i][j] = new Piece("white", false, position);
+                    }
+                }
+            }
+
+            // create a new board with the determinized grid
+            Board determinizedBoard = new Board();
+            determinizedBoard.setGrid(determinizedGrid);
+
+            // for moveCount times do a random move for white
+            for (int i = 0; i < this.moveCount+1; i++) {
+                // get a random piece of white
+                ArrayList<Piece> whitePieces = determinizedBoard.getPlayerPieces("white");
+                int randomIndex = (int) (Math.random() * whitePieces.size());
+                Piece randomWhitePiece = whitePieces.get(randomIndex);
+                // get a random valid move for this piece
+                ArrayList<int[]> validMoves = randomWhitePiece.getValidMoves(determinizedBoard);
+                // while valid moves are empty, get a new random piece
+                while (validMoves.isEmpty()) {
+                    randomIndex = (int) (Math.random() * whitePieces.size());
+                    randomWhitePiece = whitePieces.get(randomIndex);
+                    validMoves = randomWhitePiece.getValidMoves(determinizedBoard);
+                }
+                // get a random move
+                int randomMoveIndex = (int) (Math.random() * validMoves.size());
+                int[] randomMove = validMoves.get(randomMoveIndex);
+                // do the move
+                int[] from = randomWhitePiece.getPosition();
+                int[] to = randomMove;
+                Piece piece = determinizedGrid[from[0]][from[1]];
+                determinizedGrid[from[0]][from[1]] = null;
+                determinizedGrid[to[0]][to[1]] = piece;
+                piece.setPosition(to);
+            }
+            return new BoardState(determinizedBoard, this.currentPlayer);
+        }
+    }
+
+
+    public boolean isWinningMove(int[][] move) {
+//        System.out.println("move: " + move[0][0] + move[0][1] + move[1][0] + move[1][1]);
+        return (this.currentPlayer.equals("white") && move[1][0] == 0) ||
+                (this.currentPlayer.equals("black") && move[1][0] == 7);
+    }
+
+
+
+    // board state to string
+    public void StatetoString(){
+        Board board = new Board();
+        board.setGrid(this.grid);
+        board.printBoard();
     }
 
     public Piece[][] getGrid() {
@@ -91,6 +228,7 @@ public class BoardState {
     // method to get find available moves
     public ArrayList<int[][]> findPossibleMoves(String currentPlayer) {
         ArrayList<Piece> pieces = this.board.getPlayerPieces(currentPlayer);
+
         // get all valid moves of the pieces
         ArrayList<int[][]> possibleMoves = new ArrayList<>();
         for (Piece piece : pieces) {
@@ -105,6 +243,7 @@ public class BoardState {
         return possibleMoves;
     }
 
+
     // method to return opponents pieces
     public ArrayList<Piece> getOpponentPieces(String currentPlayer) {
         ArrayList<Piece> opponentPieces = new ArrayList<>();
@@ -118,17 +257,5 @@ public class BoardState {
         }
         return opponentPieces;
     }
-
-//    public BoardState clone(){
-//        BoardState clone = new BoardState(this.board, this.currentPlayer);
-//        clone.setGrid(this.grid);
-//        clone.setPossibleMoves(this.possibleMoves);
-//        clone.setIsGameOver(this.isGameOver);
-//        clone.setWinner(this.winner);
-//        clone.setMoveCount(this.moveCount);
-//        return clone;
-//    }
-
-
 
 }
