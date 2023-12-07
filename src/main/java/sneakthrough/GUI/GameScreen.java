@@ -21,10 +21,8 @@ import javafx.util.Duration;
 import sneakthrough.AI.MiniMaxMain.MiniMax;
 import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Piece;
-import sneakthrough.Player.HumanPlayer;
-import sneakthrough.Player.MiniMaxPlayer;
-import sneakthrough.Player.Player;
-import sneakthrough.Player.RandomPlayer;
+import sneakthrough.Player.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -540,6 +538,141 @@ public class GameScreen {
                         }
                     });
                 }
+
+                // ismcts player vs human player or human player vs ismcts player
+                if(whitePlayerType.equals("Human") && blackPlayerType.equals("ISMCTS") || whitePlayerType.equals("ISMCTS") && blackPlayerType.equals("Human")) {
+                    HumanPlayer humanPlayer = new HumanPlayer(isWhiteTurn ? "white" : "black");
+                    ISMCTSPlayer ismctsPlayer = new ISMCTSPlayer(!isWhiteTurn ? "white" : "black", 10000);
+
+                    cellButton.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            if (selectedPiece == null) {
+                                // Assign this piece as pieceToMove for the human player if its his (white) turn
+                                if (isWhiteTurn) {
+                                    selectedPiece = grid[finalRow][finalCol];
+                                    humanPlayer.setPieceToMove(selectedPiece);
+//                                    System.out.println("white player piece to move: " + Arrays.toString(humanPlayer.getPieceToMove().getPosition()));
+                                }
+                                else{
+                                    // ISMCTS player's turn
+                                    ismctsPlayer.makeMove(board);
+                                    updateBoardScreen(board);
+                                    isWhiteTurn = !isWhiteTurn;
+                                    System.out.println(ismctsPlayer.getColor() + " player (ISMCTS) made a move");
+
+                                    // check if random player has won
+                                    if(((ISMCTSPlayer) ismctsPlayer).hasWon(board)){
+                                        isFinished = true ;
+                                        Alert win = new Alert(Alert.AlertType.INFORMATION);
+                                        win.setHeaderText("GAME OVER!");
+                                        win.setContentText("Player " + ((ISMCTSPlayer) ismctsPlayer).getColor() + " has won!");
+                                        win.setTitle("Game finished");
+                                        //font from css
+                                        win.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/GUI/font.css")).toExternalForm());
+                                        win.getDialogPane().getStyleClass().add("dialog-pane");
+                                        //win.showAndWait();
+
+                                        Optional<ButtonType> result = win.showAndWait();
+                                        if (result.get() == ButtonType.OK){
+                                            gameStage.close();
+                                        }
+                                        if(result.get()==ButtonType.CANCEL){
+                                            gameStage.close();
+                                        }
+
+                                        gameTimer.stop();
+                                        //changeTurn.setDisable(true);
+                                    }
+                                }
+                            }
+                            else {
+                                if (isWhiteTurn) {
+                                    humanPlayer.setMoveToMake(new int[]{finalRow, finalCol});
+                                    System.out.println("white player move to make: " + Arrays.toString(humanPlayer.getMoveToMake()));
+
+                                    System.out.println("PIECE " + Arrays.toString(humanPlayer.getPieceToMove().getPosition()));
+                                    System.out.println("MOVE " + Arrays.toString(humanPlayer.getMoveToMake()));
+
+                                    humanPlayer.makeMove(board);
+                                    updateBoardScreen(board);
+
+                                    selectedPiece = null;
+                                    isWhiteTurn = !isWhiteTurn;
+                                    System.out.println("white player made a move");
+
+                                    for (Node node : gameBoard.getChildren())
+                                    {
+                                        if (node instanceof Button)
+                                        {
+                                            Button button = (Button) node;
+                                            ImageView imgView = (ImageView)button.getGraphic();
+                                            if (imgView != null && imgView.getImage() == whitePawnImage)
+                                            {
+                                                button.setDisable(true);
+                                            }
+                                        }
+                                    }
+
+                                    if(humanPlayer.getMoveToMake()[0] == 0)
+                                    {
+                                        for (Node node : gameBoard.getChildren())
+                                        {
+                                            if (node instanceof Button)
+                                            {
+                                                Button button = (Button) node ;
+                                                ImageView imgView = (ImageView)button.getGraphic();
+                                                imgView.setVisible(true);
+                                            }
+                                        }
+
+                                        isFinished = true ;
+                                        Alert win = new Alert(Alert.AlertType.INFORMATION);
+                                        win.setHeaderText("GAME OVER!");
+                                        win.setContentText("Player " + humanPlayer.getColor() + " has won!");
+                                        win.setTitle("Game finished");
+                                        //font from css
+                                        win.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/GUI/font.css")).toExternalForm());
+                                        win.getDialogPane().getStyleClass().add("dialog-pane");
+                                        //win.showAndWait();
+
+                                        Optional<ButtonType> result = win.showAndWait();
+                                        if (result.get() == ButtonType.OK){
+                                            gameStage.close();
+                                        }
+                                        if(result.get()==ButtonType.CANCEL){
+                                            gameStage.close();
+                                        }
+                                        gameTimer.stop();
+                                        //changeTurn.setDisable(true);
+                                    }
+
+                                } else {
+                                    ismctsPlayer.makeMove(board);
+                                    updateBoardScreen(board);
+
+                                    isWhiteTurn = !isWhiteTurn;
+                                    System.out.println("black player made a move");
+
+                                    for (Node node : gameBoard.getChildren())
+                                    {
+                                        if (node instanceof Button)
+                                        {
+                                            Button button = (Button) node;
+                                            ImageView imgView = (ImageView)button.getGraphic();
+                                            if (imgView != null && imgView.getImage() == blackPawnImage)
+                                            {
+                                                button.setDisable(true);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    });
+
+                }
                 gameBoard.add(cellButton, col, row);
             }
         }
@@ -587,6 +720,7 @@ public class GameScreen {
     }
 
     // helper methods
+
 
     private void updateTimerLabel() {
         int minutes = elapsedTimeInSeconds / 60;

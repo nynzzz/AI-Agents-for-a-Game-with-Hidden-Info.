@@ -60,12 +60,6 @@ public class ISMCTS {
 //            currentState.StatetoString();
 
 
-//            // print possible moves
-//            System.out.println("----------POSSIBLE MOVES-----------");
-//            for (int[][] move : possibleMoves) {
-//                System.out.println(Arrays.deepToString(move));
-//            }
-
             // selection
             selectChild();
 

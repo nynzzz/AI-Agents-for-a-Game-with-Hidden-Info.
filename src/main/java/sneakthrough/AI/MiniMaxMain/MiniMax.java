@@ -18,15 +18,15 @@ public class MiniMax{
 
         ArrayList<int[][]> possibleMoves = state.getPossibleMoves(); // Assuming a method to generate possible moves
 
-        System.out.println(state.getCurrentPlayer() + " possible moves: ");
-        for (int[][] move : possibleMoves) {
-            // Assuming each move array has two elements: the starting and ending position
-            int[] startPos = move[0]; // Start position of the move
-            int[] endPos = move[1];   // End position of the move
-
-            // Printing the move
-            System.out.println("Move from (" + startPos[0] + "," + startPos[1] + ") to (" + endPos[0] + "," + endPos[1] + ")");
-        }
+//        System.out.println(state.getCurrentPlayer() + " possible moves: ");
+//        for (int[][] move : possibleMoves) {
+//            // Assuming each move array has two elements: the starting and ending position
+//            int[] startPos = move[0]; // Start position of the move
+//            int[] endPos = move[1];   // End position of the move
+//
+//            // Printing the move
+//            System.out.println("Move from (" + startPos[0] + "," + startPos[1] + ") to (" + endPos[0] + "," + endPos[1] + ")");
+//        }
 
 
         for (int[][] move : possibleMoves) {

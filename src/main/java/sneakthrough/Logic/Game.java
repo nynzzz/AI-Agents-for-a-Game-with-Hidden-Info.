@@ -1,9 +1,6 @@
 package sneakthrough.Logic;
 
-import sneakthrough.Player.HumanPlayer;
-import sneakthrough.Player.ISMCTSPlayer;
-import sneakthrough.Player.Player;
-import sneakthrough.Player.RandomPlayer;
+import sneakthrough.Player.*;
 
 public class Game {
     private Board board;
@@ -23,12 +20,12 @@ public class Game {
             if (turn) {
                 System.out.println("White's turn");
                 player1.makeMove(board);
-                board.printBoard();
+//                board.printBoard();
                 turn = false;
             } else {
                 System.out.println("Black's turn");
                 player2.makeMove(board);
-                board.printBoard();
+//                board.printBoard();
                 turn = true;
             }
         }
@@ -139,8 +136,10 @@ public class Game {
 //     main method to play the game in console
     public static void main(String[] args) {
         Board board = new Board();
-        Player player1 = new ISMCTSPlayer("white", 10000);
+        Player player1 = new ISMCTSPlayer("white", 1000);
+//        Player player2 = new ISMCTSPlayer("black", 1000);
         Player player2 = new RandomPlayer("black");
+//        Player player2 = new MiniMaxPlayer("black");
         Game game = new Game(board,player1, player2);
         game.startGame();
     }

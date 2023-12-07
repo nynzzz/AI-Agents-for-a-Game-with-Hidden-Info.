@@ -60,7 +60,7 @@ public class MainScreen extends Application {
 
         // combo boxes for player selection
         ComboBox<String> player1ComboBox = new ComboBox<>();
-        player1ComboBox.getItems().addAll("Human", "Random", "MiniMax");
+        player1ComboBox.getItems().addAll("Human", "Random", "MiniMax", "ISMCTS");
         player1ComboBox.setPromptText("Player 1");
         player1ComboBox.setStyle("-fx-font: 24px 'Arial';");
         player1ComboBox.setPrefWidth(200);
@@ -68,7 +68,7 @@ public class MainScreen extends Application {
         player1ComboBox.setLayoutY(screenHeight/2);
 
         ComboBox<String> player2ComboBox = new ComboBox<>();
-        player2ComboBox.getItems().addAll("Human", "Random", "MiniMax");
+        player2ComboBox.getItems().addAll("Human", "Random", "MiniMax", "ISMCTS");
         player2ComboBox.setPromptText("Player 2");
         player2ComboBox.setStyle("-fx-font: 24px 'Arial';");
         player2ComboBox.setPrefWidth(200);
