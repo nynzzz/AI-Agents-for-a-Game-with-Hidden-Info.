@@ -1,6 +1,8 @@
 package sneakthrough.AI.MiniMax;
+import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Piece;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MiniMax{
 
@@ -110,6 +112,14 @@ public class MiniMax{
         }
 
         return score;
+    }
+
+    public static void main(String[] args) {
+        Board board = new Board();
+        BoardState state = new BoardState(board,"black");
+        MiniMax minimax = new MiniMax();
+        int[][] move = minimax.chooseBestMove(state, 3);
+        System.out.println(Arrays.deepToString(move));
     }
 
 }
