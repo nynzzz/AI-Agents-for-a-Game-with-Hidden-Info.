@@ -24,7 +24,7 @@ public class ISMCTSPlayer implements Player {
 
     @Override
     public void makeMove(Board board) {
-        // Convert the current board state to a BoardState for ISMCTS
+        // Convert the current board to a BoardState for ISMCTS
         BoardState currentState = new BoardState(board, this.color);
 
         // Initialize the ISMCTS algorithm with the current state and iteration limit
@@ -35,15 +35,10 @@ public class ISMCTSPlayer implements Player {
 
         // Get the piece to move and the move to make
         Piece piece = board.getGrid()[bestMove[0][0]][bestMove[0][1]];
-//        System.out.println("Piece: " + piece.getPosition()[0] + piece.getPosition()[1]);
         int[] move = {bestMove[1][0], bestMove[1][1]};
-//        System.out.println("Move: " + move[0] + move[1]);
-
-
 
         // make the move
         if(piece.isCaptureMove(board, move)){
-//            System.out.println("Its a capture move");
             Piece capturedPiece = board.getGrid()[move[0]][move[1]];
             // remove captured piece
             board.removeCapturedPiece(capturedPiece);
@@ -58,14 +53,12 @@ public class ISMCTSPlayer implements Player {
         }
         // check if move is a reveal move
         else if(piece.isRevealMove(board, move)){
-//            System.out.println("Its a reveal move");
             // reveal piece of the opponent
             board.getGrid()[move[0]][move[1]].setStatus(true);
             //stay at the same position
         }
         // the move is neither a capture or a reveal move
         else{
-//            System.out.println("Its a normal move");
             // move piece
             board.getGrid()[move[0]][move[1]] = piece;
             // remove piece from old position
@@ -73,9 +66,7 @@ public class ISMCTSPlayer implements Player {
             // update piece position
             piece.setPosition(move);
         }
-
         board.moveCount++;
-
     }
 
     public String getColor() {

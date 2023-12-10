@@ -47,19 +47,12 @@ public class ISMCTS {
 
             int[][] winingMove = rootState.makeWinningMoveIfExists();
             if(winingMove != null){
-//                System.out.println("----------WINNING MOVE-----------");
-//                System.out.println(Arrays.deepToString(winingMove));
                 Node_ISMCTS winningNode = new Node_ISMCTS(rootNode, winingMove, rootState.getCurrentPlayer());
                 return winningNode;
             }
 
             this.currentState = rootState.determinize();
             this.possibleMoves = currentState.getPossibleMoves();
-
-//            // print current state
-//            System.out.println("----------------DET BOARD------------------");
-//            currentState.StatetoString();
-
 
             // selection
             selectChild();
@@ -123,9 +116,6 @@ public class ISMCTS {
             this.currentNode = this.currentNode.getParent();
         }
     }
-
-
-
 
 
 

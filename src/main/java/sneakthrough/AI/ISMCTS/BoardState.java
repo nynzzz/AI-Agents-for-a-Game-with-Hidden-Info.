@@ -118,7 +118,7 @@ public class BoardState {
             Board determinizedBoard = new Board();
             determinizedBoard.setGrid(determinizedGrid);
 
-            // for moveCount times do a random move for white
+            // for moveCount + 1 times do a random move for white
             for (int i = 0; i < this.moveCount+1; i++) {
                 // get a random piece of white
                 ArrayList<Piece> whitePieces = determinizedBoard.getPlayerPieces("white");
