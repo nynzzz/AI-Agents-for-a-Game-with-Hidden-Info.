@@ -18,7 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import sneakthrough.AI.MiniMaxMain.MiniMax;
+import sneakthrough.AI.MiniMax.MiniMax;
 import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Piece;
 import sneakthrough.Player.*;
@@ -538,6 +538,78 @@ public class GameScreen {
                         }
                     });
                 }
+
+                if (whitePlayerType.equals("MiniMax") && blackPlayerType.equals("Random") || whitePlayerType.equals("Random") && blackPlayerType.equals("MiniMax")) {
+
+                    MiniMaxPlayer miniMaxPlayer = new MiniMaxPlayer("white");
+                    RandomPlayer randomPlayer = new RandomPlayer("black");
+
+                    cellButton.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            if (!isFinished) {
+                                if (isWhiteTurn && whitePlayerType.equals("MiniMax") || !isWhiteTurn && blackPlayerType.equals("MiniMax")) {
+                                    miniMaxPlayer.makeMove(board);
+                                    updateBoardScreen(board);
+                                    System.out.println("MiniMax player made a move");
+                                    for (Node node : gameBoard.getChildren())
+                                    {
+                                        if (node instanceof Button)
+                                        {
+                                            Button button = (Button) node;
+                                            ImageView imgView = (ImageView)button.getGraphic();
+                                            if (imgView != null && imgView.getImage() == whitePawnImage)
+                                            {
+                                                button.setDisable(true);
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    randomPlayer.makeMove(board);
+                                    System.out.println("Random player made a move");
+                                    updateBoardScreen(board);
+                                    for (Node node : gameBoard.getChildren())
+                                    {
+                                        if (node instanceof Button)
+                                        {
+                                            Button button = (Button) node;
+                                            ImageView imgView = (ImageView)button.getGraphic();
+                                            if (imgView != null && imgView.getImage() == blackPawnImage)
+                                            {
+                                                button.setDisable(true);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Check win conditions
+                                if (miniMaxPlayer.hasWon(board)) {
+                                    isFinished = true;
+                                    Alert win = new Alert(Alert.AlertType.INFORMATION);
+                                    win.setHeaderText("GAME OVER!");
+                                    win.setContentText("Player 1 has won!");
+                                    win.setTitle("Game finished");
+                                    //font from css
+                                    win.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/GUI/font.css")).toExternalForm());
+                                    win.getDialogPane().getStyleClass().add("dialog-pane");
+                                } else if (randomPlayer.hasWon(board)) {
+                                    isFinished = true;
+                                    Alert win = new Alert(Alert.AlertType.INFORMATION);
+                                    win.setHeaderText("GAME OVER!");
+                                    win.setContentText("Player 2 has won!");
+                                    win.setTitle("Game finished");
+                                    //font from css
+                                    win.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/GUI/font.css")).toExternalForm());
+                                    win.getDialogPane().getStyleClass().add("dialog-pane");
+                                } else {
+                                    // Switch turns only if no one has won
+                                    isWhiteTurn = !isWhiteTurn;
+                                }
+                            }
+                        }
+                    });
+                }
+
 
                 // ismcts player vs human player or human player vs ismcts player
                 if(whitePlayerType.equals("Human") && blackPlayerType.equals("ISMCTS") || whitePlayerType.equals("ISMCTS") && blackPlayerType.equals("Human")) {

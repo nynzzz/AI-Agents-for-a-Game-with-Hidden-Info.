@@ -1,20 +1,19 @@
 package sneakthrough.Player;
-
-import sneakthrough.AI.MiniMaxMain.BoardState;
-import sneakthrough.AI.MiniMaxMain.MiniMax;
+import sneakthrough.AI.MiniMax.BoardState;
+import sneakthrough.AI.MiniMax.MiniMax;
 import sneakthrough.Logic.Board;
 
 public class MiniMaxPlayer implements Player {
     public MiniMax minimax ;
-
+    public int[][] moveToMake;
     public String player ;
-
     public int depth ;
     public MiniMaxPlayer(String player)
     {
         this.minimax = new MiniMax();
         this.player = player ;
         this.depth = 3 ;
+        this.moveToMake = null ;
     }
 
     public String getPlayer()
@@ -26,7 +25,7 @@ public class MiniMaxPlayer implements Player {
     public void makeMove(Board board)
     {
         BoardState state = new BoardState(board,this.player);
-        int[][] moveToMake = minimax.chooseBestMove(state,this.depth);
+        moveToMake = minimax.chooseBestMove(state,this.depth);
         state.makeMove(moveToMake);
     }
 
