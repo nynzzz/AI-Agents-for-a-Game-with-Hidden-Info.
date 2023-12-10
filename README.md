@@ -14,6 +14,7 @@ Sneakthrough, there's a unique twist involving the opponent's pieces.
 # To run the code:
 
 - Open the executable JAR `Project_2.1_06.jar`
+- JAR is located at: `out/artifacts/Project_2_1_06_jar/Project_2.1_06.jar`
 
 Or
 
