@@ -1,4 +1,4 @@
-package sneakthrough.AI.MiniMaxMain;
+package sneakthrough.AI.MiniMax;
 
 import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Piece;
@@ -11,7 +11,6 @@ public class BoardState {
     private ArrayList<int[][]> possibleMoves;
     private boolean isGameOver;
     private String winner;
-    
     int size ;
     
 
@@ -38,10 +37,6 @@ public class BoardState {
         return this.currentPlayer;
     }
 
-    public void setCurrentPlayer(String currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
-
     public ArrayList<int[][]> getPossibleMoves() {
         return findPossibleMoves(this.currentPlayer);
     }
@@ -52,18 +47,6 @@ public class BoardState {
 
     public boolean getIsGameOver() {
         return this.isGameOver;
-    }
-
-    public void setIsGameOver(boolean isGameOver) {
-        this.isGameOver = isGameOver;
-    }
-
-    public String getWinner() {
-        return this.winner;
-    }
-
-    public void setWinner(String winner) {
-        this.winner = winner;
     }
 
     public int getSize() { return this.size;}
@@ -100,30 +83,15 @@ public class BoardState {
         return possibleMoves;
     }
 
-    // method to return opponents pieces
-    public ArrayList<Piece> getOpponentPieces(String currentPlayer) {
-        ArrayList<Piece> opponentPieces = new ArrayList<>();
-        for (int i = 0; i < this.grid.length; i++) {
-            for (int j = 0; j < this.grid.length; j++) {
-                Piece piece = this.grid[i][j];
-                if (piece != null && !piece.getColor().equals(currentPlayer)) {
-                    opponentPieces.add(piece);
-                }
-            }
-        }
-        return opponentPieces;
-    }
-
     public BoardState clone() {
         // Create a deep clone of the board
-        Board clonedBoard = new Board(); // Assuming Board has a default constructor
+        Board clonedBoard = new Board();
 
         // Clone the grid with deep copy of each Piece
         Piece[][] clonedGrid = new Piece[this.size][this.size];
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
                 if (this.grid[i][j] != null) {
-                    // Assuming Piece has a suitable constructor or clone method
                     clonedGrid[i][j] = new Piece(this.grid[i][j]);
                 } else {
                     clonedGrid[i][j] = null;
@@ -137,13 +105,9 @@ public class BoardState {
         // Create a new BoardState instance with the cloned board
         BoardState clonedState = new BoardState(clonedBoard, this.currentPlayer);
 
-        // Clone other primitive or immutable fields
         clonedState.isGameOver = this.isGameOver;
-        clonedState.winner = this.winner; // Assuming winner is a String or another immutable type
-        clonedState.size = this.size; // Assuming size is a primitive type
-
-        // You might need to clone other state variables here if they exist
-        // ...
+        clonedState.winner = this.winner;
+        clonedState.size = this.size;
 
         return clonedState;
     }

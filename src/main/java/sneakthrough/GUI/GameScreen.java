@@ -18,7 +18,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import sneakthrough.AI.MiniMaxMain.MiniMax;
 import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Piece;
 import sneakthrough.Player.*;

@@ -1,14 +1,12 @@
 package sneakthrough.Player;
-
-import sneakthrough.AI.MiniMaxMain.BoardState;
-import sneakthrough.AI.MiniMaxMain.MiniMax;
+import sneakthrough.AI.MiniMax.BoardState;
+import sneakthrough.AI.MiniMax.MiniMax;
 import sneakthrough.Logic.Board;
 
 public class MiniMaxPlayer implements Player {
     public MiniMax minimax ;
 
     public String player ;
-
     public int depth ;
     public MiniMaxPlayer(String player)
     {
