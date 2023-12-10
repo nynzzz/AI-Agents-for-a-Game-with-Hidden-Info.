@@ -16,12 +16,13 @@ public class ISMCTS {
     private Node_ISMCTS currentNode;
 
     private int iterLimit;
-    private static final double EXPL = 0.7;
+    private double EXPL;
 
 
-    public ISMCTS(BoardState rootState, int iterLimit) {
+    public ISMCTS(BoardState rootState, int iterLimit, double EXPL) {
         this.rootState = rootState;
         this.iterLimit = iterLimit;
+        this.EXPL = EXPL;
     }
 
     public BoardState getRootState() {
@@ -46,8 +47,8 @@ public class ISMCTS {
 
             int[][] winingMove = rootState.makeWinningMoveIfExists();
             if(winingMove != null){
-                System.out.println("----------WINNING MOVE-----------");
-                System.out.println(Arrays.deepToString(winingMove));
+//                System.out.println("----------WINNING MOVE-----------");
+//                System.out.println(Arrays.deepToString(winingMove));
                 Node_ISMCTS winningNode = new Node_ISMCTS(rootNode, winingMove, rootState.getCurrentPlayer());
                 return winningNode;
             }
@@ -81,7 +82,7 @@ public class ISMCTS {
             }
         }
 
-        System.out.println("----------BEST CHILD-----------" + best.toString());
+//        System.out.println("----------BEST CHILD-----------" + best.toString());
         return best;
     }
 
@@ -131,7 +132,7 @@ public class ISMCTS {
     public static void main(String[] args){
         Board board = new Board();
         BoardState boardState = new BoardState(board, "white");
-        ISMCTS ismcts = new ISMCTS(boardState, 1000);
+        ISMCTS ismcts = new ISMCTS(boardState, 1000, 0.7);
         Node_ISMCTS rootNode = new Node_ISMCTS(null, null, boardState.getCurrentPlayer());
 //        System.out.println("root node: " + rootNode.toString());
         Node_ISMCTS newRoot= ismcts.runISMCTS();

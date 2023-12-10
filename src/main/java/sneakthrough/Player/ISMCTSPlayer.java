@@ -12,11 +12,14 @@ public class ISMCTSPlayer implements Player {
     private String color;
     private int iterationLimit;
 
+    private double EXPL;
+
     private ArrayList<int[][]> movesDoneSoFar = new ArrayList<>();
 
-    public ISMCTSPlayer(String color, int iterationLimit) {
+    public ISMCTSPlayer(String color, int iterationLimit, double EXPL) {
         this.color = color;
         this.iterationLimit = iterationLimit;
+        this.EXPL = EXPL;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class ISMCTSPlayer implements Player {
         BoardState currentState = new BoardState(board, this.color);
 
         // Initialize the ISMCTS algorithm with the current state and iteration limit
-        ISMCTS ismcts = new ISMCTS(currentState, iterationLimit);
+        ISMCTS ismcts = new ISMCTS(currentState, iterationLimit, EXPL);
 
         // Run the ISMCTS algorithm to get the best move
         int[][] bestMove = ismcts.runISMCTS().getMove();

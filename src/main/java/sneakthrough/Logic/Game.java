@@ -66,6 +66,35 @@ public class Game {
 
     // ---------------------------- //
 
+    // same stuff but for ismcts vs random
+
+    public String startGameExperimentsISMCTS() {
+        while (!isGameOver()) {
+            if (turn) {
+                player1.makeMove(board);
+//                System.out.println("--------------------");
+//                board.printBoard();
+//                System.out.println("--------------------");
+                turn = false;
+            } else {
+                player2.makeMove(board);
+//                System.out.println("--------------------");
+//                board.printBoard();
+//                System.out.println("--------------------");
+                turn = true;
+            }
+        }
+
+        if (isWhiteWinner()) {
+            return "ismcts";
+        } else if (isBlackWinner()) {
+            return "random";
+        }
+        return null;
+    }
+
+    // ---------------------------- //
+
     public Board getBoard() {
         return board;
     }
@@ -136,7 +165,7 @@ public class Game {
 //     main method to play the game in console
     public static void main(String[] args) {
         Board board = new Board();
-        Player player1 = new ISMCTSPlayer("white", 1000);
+        Player player1 = new ISMCTSPlayer("white", 1000, 0.7);
 //        Player player2 = new ISMCTSPlayer("black", 1000);
         Player player2 = new RandomPlayer("black");
 //        Player player2 = new MiniMaxPlayer("black");

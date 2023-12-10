@@ -542,7 +542,7 @@ public class GameScreen {
                 // ismcts player vs human player or human player vs ismcts player
                 if(whitePlayerType.equals("Human") && blackPlayerType.equals("ISMCTS") || whitePlayerType.equals("ISMCTS") && blackPlayerType.equals("Human")) {
                     HumanPlayer humanPlayer = new HumanPlayer(isWhiteTurn ? "white" : "black");
-                    ISMCTSPlayer ismctsPlayer = new ISMCTSPlayer(!isWhiteTurn ? "white" : "black", 10000);
+                    ISMCTSPlayer ismctsPlayer = new ISMCTSPlayer(!isWhiteTurn ? "white" : "black", 10000, 0.7);
 
                     cellButton.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
