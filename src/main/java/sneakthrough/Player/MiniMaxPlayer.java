@@ -5,7 +5,7 @@ import sneakthrough.Logic.Board;
 
 public class MiniMaxPlayer implements Player {
     public MiniMax minimax ;
-
+    public int[][] moveToMake;
     public String player ;
     public int depth ;
     public MiniMaxPlayer(String player)
@@ -25,7 +25,7 @@ public class MiniMaxPlayer implements Player {
     public void makeMove(Board board)
     {
         BoardState state = new BoardState(board,this.player);
-        int[][] moveToMake = minimax.chooseBestMove(state,this.depth);
+        moveToMake = minimax.chooseBestMove(state,this.depth);
         state.makeMove(moveToMake);
     }
 
