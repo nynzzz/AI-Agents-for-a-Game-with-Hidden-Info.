@@ -29,20 +29,12 @@ public class BoardState {
         return this.grid;
     }
 
-    public void setGrid(Piece[][] grid) {
-        this.grid = grid;
-    }
-
     public String getCurrentPlayer() {
         return this.currentPlayer;
     }
 
     public ArrayList<int[][]> getPossibleMoves() {
         return findPossibleMoves(this.currentPlayer);
-    }
-
-    public void setPossibleMoves(ArrayList<int[][]> possibleMoves) {
-        this.possibleMoves = possibleMoves;
     }
 
     public boolean getIsGameOver() {
@@ -70,7 +62,7 @@ public class BoardState {
     public ArrayList<int[][]> findPossibleMoves(String currentPlayer) {
         ArrayList<Piece> pieces = this.board.getPlayerPieces(currentPlayer);
         // get all valid moves of the pieces
-        ArrayList<int[][]> possibleMoves = new ArrayList<>();
+        possibleMoves = new ArrayList<>();
         for (Piece piece : pieces) {
             ArrayList<int[]> validMoves = piece.getValidMoves(this.board);
             for (int[] move : validMoves) {
@@ -98,11 +90,8 @@ public class BoardState {
                 }
             }
         }
-
-        // Set the cloned grid in the cloned board
         clonedBoard.setGrid(clonedGrid);
 
-        // Create a new BoardState instance with the cloned board
         BoardState clonedState = new BoardState(clonedBoard, this.currentPlayer);
 
         clonedState.isGameOver = this.isGameOver;
