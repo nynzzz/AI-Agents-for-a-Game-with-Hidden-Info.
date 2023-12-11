@@ -3,6 +3,7 @@ package sneakthrough.Experiments;
 import com.opencsv.CSVWriter;
 import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Game;
+import sneakthrough.Player.ISMCTSPlayer;
 import sneakthrough.Player.MiniMaxPlayer;
 import sneakthrough.Player.Player;
 import sneakthrough.Player.RandomPlayer;
@@ -18,8 +19,11 @@ public class MiniMaxExperiments {
         int numOfRuns = 1000;
         float winswhite = 0;
 
-        Player white = new MiniMaxPlayer("white");
-        Player black = new RandomPlayer("black");
+        //Player white = new MiniMaxPlayer("white");
+        //Player black = new RandomPlayer("black");
+
+        Player white = new ISMCTSPlayer("white",1000,0.7);
+        Player black = new MiniMaxPlayer("black");
 
         // Start time measurement
         long startTime = System.currentTimeMillis();
