@@ -3,31 +3,33 @@ import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Piece;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
-public class MiniMax{
+public class MiniMax {
 
-    public int[][] chooseBestMove(BoardState state, int depth)
-    {
+    public int[][] chooseBestMove(BoardState state, int depth) {
         int bestValue = Integer.MIN_VALUE;
-        int[][] bestMove = null ;
+        int[][] bestMove = null;
+        int alpha = Integer.MIN_VALUE;
+        int beta = Integer.MAX_VALUE;
 
         ArrayList<int[][]> possibleMoves = state.getPossibleMoves();
-
         for (int[][] move : possibleMoves) {
             BoardState newState = state.clone();
             newState.makeMove(move);
 
-            int moveValue = minimax(newState, depth - 1, false);
+            int moveValue = minimax(newState, depth - 1, false, alpha, beta);
             if (moveValue > bestValue) {
                 bestValue = moveValue;
                 bestMove = move;
             }
+
+            alpha = Math.max(alpha, bestValue);
         }
         return bestMove;
     }
 
-    private int minimax(BoardState state, int depth, boolean isMaximizingPlayer)
-    {
+    private int minimax(BoardState state, int depth, boolean isMaximizingPlayer, int alpha, int beta) {
         if (depth == 0 || state.getIsGameOver()) {
             return evaluate(state);
         }
@@ -38,7 +40,11 @@ public class MiniMax{
                 BoardState newState = state.clone();
                 newState.makeMove(move);
 
-                bestValue = Math.max(bestValue, minimax(newState, depth - 1, false));
+                bestValue = Math.max(bestValue, minimax(newState, depth - 1, false, alpha, beta));
+                alpha = Math.max(alpha, bestValue);
+                if (beta <= alpha) {
+                    break; // beta cutoff
+                }
             }
             return bestValue;
         } else {
@@ -47,7 +53,11 @@ public class MiniMax{
                 BoardState newState = state.clone();
                 newState.makeMove(move);
 
-                bestValue = Math.min(bestValue, minimax(newState, depth - 1, true));
+                bestValue = Math.min(bestValue, minimax(newState, depth - 1, true, alpha, beta));
+                beta = Math.min(beta, bestValue);
+                if (beta <= alpha) {
+                    break; // alpha cutoff
+                }
             }
             return bestValue;
         }

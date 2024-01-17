@@ -12,7 +12,7 @@ public class MiniMaxPlayer implements Player {
     {
         this.minimax = new MiniMax();
         this.player = player ;
-        this.depth = 3 ;
+        this.depth = 4 ;
         this.moveToMake = null ;
     }
 

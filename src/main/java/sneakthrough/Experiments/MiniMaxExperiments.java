@@ -3,6 +3,7 @@ package sneakthrough.Experiments;
 import com.opencsv.CSVWriter;
 import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Game;
+import sneakthrough.Player.ISMCTSPlayer;
 import sneakthrough.Player.MiniMaxPlayer;
 import sneakthrough.Player.Player;
 import sneakthrough.Player.RandomPlayer;
@@ -15,13 +16,17 @@ public class MiniMaxExperiments {
 
         CSVWriter writer = new CSVWriter(new FileWriter("src/main/resources/Experiments/minimax.csv"));
 
-        int numOfRuns = 1500;
-        float winswhite = 0 ;
-        float winsblack = 0 ;
+        int numOfRuns = 1000;
+        float winswhite = 0;
 
-        Player white = new MiniMaxPlayer("white");
-        Player black = new RandomPlayer("black");
+        //Player white = new MiniMaxPlayer("white");
+        //Player black = new RandomPlayer("black");
 
+        Player white = new ISMCTSPlayer("white",1000,0.7);
+        Player black = new MiniMaxPlayer("black");
+
+        // Start time measurement
+        long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < numOfRuns; i++) {
             String iter = String.valueOf(i);
@@ -32,12 +37,20 @@ public class MiniMaxExperiments {
 
             String[] text = {iter, winner};
             if(text[1].equals("white")) winswhite++;
-            else winsblack++;
             writer.writeNext(text);
-
         }
 
-        writer.writeNext(new String[]{"Win Ratio for MiniMax in games against Random: " + (winswhite / numOfRuns)*100});
+        // End time measurement
+        long endTime = System.currentTimeMillis();
+
+        // Calculate runtime in minutes
+        long runtimeMillis = endTime - startTime;
+        double runtimeMinutes = runtimeMillis / 60000.0;
+
+        writer.writeNext(new String[]{"Win Ratio for MiniMax in games against Random: " + (winswhite / numOfRuns) * 100});
         writer.flush();
+
+        // Print runtime in the terminal
+        System.out.println("Total runtime: " + runtimeMinutes + " minutes");
     }
 }
