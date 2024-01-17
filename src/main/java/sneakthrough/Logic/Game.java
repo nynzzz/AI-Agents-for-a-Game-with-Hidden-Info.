@@ -1,6 +1,9 @@
 package sneakthrough.Logic;
 
+import sneakthrough.AI.ISMCTS.BoardState;
 import sneakthrough.Player.*;
+
+import java.util.ArrayList;
 
 public class Game {
     private Board board;
@@ -18,22 +21,33 @@ public class Game {
     public void startGame() {
         while (!isGameOver()) {
             if (turn) {
-                System.out.println("White's turn");
+                System.out.println("--------------------");
+                System.out.println("board state: " + board.printBoardtoStringFlattened());
+                System.out.println("player to move : w ");
+
                 player1.makeMove(board);
+//                System.out.println("--------------------");
 //                board.printBoard();
+
                 turn = false;
             } else {
-                System.out.println("Black's turn");
+                System.out.println("--------------------");
+                System.out.println("board state: " + board.printBoardtoStringFlattened());
+                System.out.println("player to move : b ");
+
                 player2.makeMove(board);
+//                System.out.println("--------------------");
 //                board.printBoard();
                 turn = true;
             }
         }
 
         if (isWhiteWinner()) {
-            System.out.println("Game Over - White Wins!");
+            System.out.println("--------------------");
+            System.out.println("winner: w");
         } else if (isBlackWinner()) {
-            System.out.println("Game Over - Black Wins!");
+            System.out.println("--------------------");
+            System.out.println("winner: b");
         }
     }
 
@@ -92,6 +106,13 @@ public class Game {
         }
         return null;
     }
+
+
+
+
+
+
+
 
     // ---------------------------- //
 
@@ -167,7 +188,7 @@ public class Game {
         Board board = new Board();
         Player player1 = new ISMCTSPlayer("white", 1000, 0.7);
 //        Player player2 = new ISMCTSPlayer("black", 1000);
-        Player player2 = new RandomPlayer("black");
+        Player player2 = new ISMCTSPlayer("black", 1000, 0.7);
 //        Player player2 = new MiniMaxPlayer("black");
         Game game = new Game(board,player1, player2);
         game.startGame();

@@ -26,6 +26,41 @@ public class BoardState {
         this.moveCount = board.getMoveCount();
     }
 
+    // method printState to print the board state as a 2d array
+    public String toString() {
+        String state = "";
+        for (int i = 0; i < this.grid.length; i++) {
+            state += "[";
+            for (int j = 0; j < this.grid.length; j++) {
+                if (this.grid[i][j] != null) {
+                    state += this.grid[i][j].getColor().charAt(0);
+                } else {
+                    state += "0";
+                }
+                if (j != this.grid.length - 1) {
+                    state += ", ";
+                }
+            }
+            state += "]\n";
+        }
+        return state;
+    }
+
+    // method to return the  flattened string representation of the board state
+    public String toStringFlattened() {
+        String state = "";
+        for (int i = 0; i < this.grid.length; i++) {
+            for (int j = 0; j < this.grid.length; j++) {
+                if (this.grid[i][j] != null) {
+                    state += this.grid[i][j].getColor().charAt(0);
+                } else {
+                    state += "0";
+                }
+            }
+        }
+        return state;
+    }
+
 
     // determinization method for black. for moveCount times do a random move for black
     public BoardState determinize() {

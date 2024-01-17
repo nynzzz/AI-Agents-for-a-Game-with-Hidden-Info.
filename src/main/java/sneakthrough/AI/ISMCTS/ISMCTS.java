@@ -48,6 +48,8 @@ public class ISMCTS {
             int[][] winingMove = rootState.makeWinningMoveIfExists();
             if(winingMove != null){
                 Node_ISMCTS winningNode = new Node_ISMCTS(rootNode, winingMove, rootState.getCurrentPlayer());
+//                System.out.println("child visits: " + rootNode.printChildrenToStringFlattened());
+//                System.out.println("move to take: " + winningNode.printMoveToStringFlattened());
                 return winningNode;
             }
 
@@ -75,7 +77,9 @@ public class ISMCTS {
             }
         }
 
-//        System.out.println("----------BEST CHILD-----------" + best.toString());
+//        System.out.println("child visits: " + rootNode.printChildrenToStringFlattened());
+//        System.out.println("move to take: " + best.printMoveToStringFlattened());
+
         return best;
     }
 

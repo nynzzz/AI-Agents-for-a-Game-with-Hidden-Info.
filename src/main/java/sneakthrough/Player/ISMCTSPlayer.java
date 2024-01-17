@@ -2,6 +2,7 @@ package sneakthrough.Player;
 
 import sneakthrough.AI.ISMCTS.BoardState;
 import sneakthrough.AI.ISMCTS.ISMCTS;
+import sneakthrough.AI.ISMCTS.Node_ISMCTS;
 import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Piece;
 
@@ -13,6 +14,9 @@ public class ISMCTSPlayer implements Player {
     private int iterationLimit;
 
     private double EXPL;
+
+    public String visitCounts;
+    public String moveToTake;
 
     private ArrayList<int[][]> movesDoneSoFar = new ArrayList<>();
 
@@ -30,8 +34,17 @@ public class ISMCTSPlayer implements Player {
         // Initialize the ISMCTS algorithm with the current state and iteration limit
         ISMCTS ismcts = new ISMCTS(currentState, iterationLimit, EXPL);
 
+        // best child node
+        Node_ISMCTS bestChild = ismcts.runISMCTS();
+
         // Run the ISMCTS algorithm to get the best move
-        int[][] bestMove = ismcts.runISMCTS().getMove();
+        int[][] bestMove = bestChild.getMove();
+
+//        System.out.println(bestChild.printMoveToStringFlattened());
+//        System.out.println(bestChild.getParent().printChildrenToStringFlattened());
+        this.moveToTake = bestChild.printMoveToStringFlattened();
+        this.visitCounts = bestChild.getParent().printChildrenToStringFlattened();
+
 
         // Get the piece to move and the move to make
         Piece piece = board.getGrid()[bestMove[0][0]][bestMove[0][1]];

@@ -23,20 +23,20 @@ public class Board {
     }
 
     //copy constructor
-    public Board(Board board) {
-        this.size = board.size;
-        this.grid = new Piece[this.size][this.size];
-
-        for (int i = 0; i < this.size; i++) {
-            for (int j = 0; j < this.size; j++) {
-                if (board.grid[i][j] != null) {
-                    this.grid[i][j] = new Piece(board.grid[i][j]);
-                } else {
-                    this.grid[i][j] = null;
-                }
-            }
-        }
-    }
+//    public Board(Board board) {
+//        this.size = board.size;
+//        this.grid = new Piece[this.size][this.size];
+//
+//        for (int i = 0; i < this.size; i++) {
+//            for (int j = 0; j < this.size; j++) {
+//                if (board.grid[i][j] != null) {
+//                    this.grid[i][j] = new Piece(board.grid[i][j]);
+//                } else {
+//                    this.grid[i][j] = null;
+//                }
+//            }
+//        }
+//    }
 
     public int getMoveCount() {
         return moveCount;
@@ -109,6 +109,29 @@ public class Board {
             }
             System.out.println();
         }
+    }
+
+    // method to print the board grid as flattened string
+    public String printBoardtoStringFlattened(){
+        String boardString = "";
+        for (int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++){
+                if(grid[i][j] == null){
+                    boardString += "0";
+                }
+                else{
+                    // if piece is white
+                    if(grid[i][j].getColor().equals("white")){
+                        boardString += "w";
+                    }
+                    // if piece is black
+                    else{
+                        boardString += "b";
+                    }
+                }
+            }
+        }
+        return boardString;
     }
 
     public Piece[][] getGrid() {

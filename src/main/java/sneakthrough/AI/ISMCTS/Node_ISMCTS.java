@@ -22,6 +22,23 @@ public class Node_ISMCTS {
         this.considerations = 1;
     }
 
+
+    // a method to print the nodes move as flattened string in format "i_old,j_old;i_new,j_new"
+    public String printMoveToStringFlattened(){
+        String moveString = "";
+        moveString += this.move[0][0] + "," + this.move[0][1] + ":" + this.move[1][0] + "," + this.move[1][1];
+        return moveString;
+    }
+
+    // a method to print the nodes children as flattened string in format "i1_old,j1_old:i1_new,j1_new,count1;..."
+    public String printChildrenToStringFlattened(){
+        String childrenString = "";
+        for (Node_ISMCTS child : this.children) {
+            childrenString += child.printMoveToStringFlattened() + "," + child.getVisits() + ";";
+        }
+        return childrenString;
+    }
+
     public Node_ISMCTS getParent() {
         return this.parent;
     }
