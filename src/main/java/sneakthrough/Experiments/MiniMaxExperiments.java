@@ -19,11 +19,11 @@ public class MiniMaxExperiments {
         int numOfRuns = 1000;
         float winswhite = 0;
 
-        //Player white = new MiniMaxPlayer("white");
-        //Player black = new RandomPlayer("black");
+        Player white = new MiniMaxPlayer("white");
+        Player black = new RandomPlayer("black");
 
-        Player white = new ISMCTSPlayer("white",1000,0.7);
-        Player black = new MiniMaxPlayer("black");
+        //Player white = new ISMCTSPlayer("white",1000,0.7);
+        //Player black = new MiniMaxPlayer("black");
 
         // Start time measurement
         long startTime = System.currentTimeMillis();

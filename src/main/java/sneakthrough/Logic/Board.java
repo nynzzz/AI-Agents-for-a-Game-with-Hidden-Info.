@@ -1,8 +1,5 @@
 package sneakthrough.Logic;
 
-import sneakthrough.Player.HumanPlayer;
-import sneakthrough.Player.Player;
-
 import java.util.ArrayList;
 
 public class Board {
@@ -21,6 +18,7 @@ public class Board {
         this.numberBlackTurns = 0;
         this.moveCount = 0;
     }
+
 
     //copy constructor
 //    public Board(Board board) {
@@ -63,6 +61,7 @@ public class Board {
                 }
             }
         }
+
     }
 
     public int whitePiecesLeft(){
@@ -132,6 +131,34 @@ public class Board {
             }
         }
         return boardString;
+    }
+
+    public int[] printBoardToVector() {
+        ArrayList<Integer> boardVector = new ArrayList<>();
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (grid[i][j] == null) {
+                    boardVector.add(0);
+                } else {
+                    // if piece is white
+                    if (grid[i][j].getColor().equals("white")) {
+                        boardVector.add(1);
+                    }
+                    // if piece is black
+                    else {
+                        boardVector.add(-1);
+                    }
+                }
+            }
+        }
+
+        // Convert ArrayList to array
+        int[] boardArray = new int[boardVector.size()];
+        for (int i = 0; i < boardVector.size(); i++) {
+            boardArray[i] = boardVector.get(i);
+        }
+        return boardArray;
     }
 
     public Piece[][] getGrid() {
@@ -268,7 +295,6 @@ public class Board {
 
             return clonedBoard;
     }
-
 
 }
 

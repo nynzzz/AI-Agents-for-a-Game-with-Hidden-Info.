@@ -3,7 +3,6 @@ import sneakthrough.Logic.Board;
 import sneakthrough.Logic.Piece;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class MiniMax {
 
