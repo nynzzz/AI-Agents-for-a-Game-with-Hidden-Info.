@@ -184,6 +184,7 @@ public class Board {
     }
 
     // get all pieces of a player color
+
     public ArrayList<Piece> getPlayerPieces(String color){
         ArrayList<Piece> playerPieces = new ArrayList<Piece>();
         int index = 0;
