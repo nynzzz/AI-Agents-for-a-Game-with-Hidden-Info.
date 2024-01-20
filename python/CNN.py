@@ -37,11 +37,11 @@ pad_state = ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 #initialize parameters
 input_size = 64
 hidden_size = 32
-output_size = 1
+output_size = 2 #score a game state 
 num_layers = 2
 learning_rate = 0.001
-num_epochs = 1000
-batch_size = 64
+num_epochs = 400
+batch_size = 32
 sequence_length = 18
 
 #setting up the lenght of the sequence to match the fixed lenght
@@ -92,11 +92,6 @@ def extract_board_and_winners(game_sequences) :
 
 train_features, train_labels = extract_board_and_winners(train_sequences)
 test_features, test_labels = extract_board_and_winners(test_sequences)
-
-print(type(test_features))
-print(type(test_features[0]))
-print(len(test_features[0]))
-
 
 
 #convert into torch
@@ -168,9 +163,4 @@ with torch.no_grad():
     test_accuracy = (predicted_labels == test_labels).float().mean()
     print(f"Test Accuracy: {test_accuracy.item() * 100:.2f}%")
 
-    # Additional metrics
-    predicted_labels_np = predicted_labels.numpy()
-    test_labels_np = test_labels.numpy()
-    print(classification_report(test_labels_np, predicted_labels_np))
-    print(confusion_matrix(test_labels_np, predicted_labels_np))
    
