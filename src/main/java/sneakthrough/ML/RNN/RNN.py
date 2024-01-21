@@ -154,7 +154,9 @@ for epoch in range(num_epochs):
     if (epoch + 1) % 100 == 0:
         print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {total_loss / len(train_features)}')
         
-        
+#check point
+torch.save(model.state_dict(), '/Users/nguyenhoanghai/Documents/GitHub/Project_2.1_06/src/main/resources/ML/LSTM/CNN_checkpoint.pth')
+
 #evaluate the model
 model.eval()
 with torch.no_grad():
