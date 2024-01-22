@@ -30,7 +30,7 @@ class LSTM(nn.Module):
         return output
 
 input_size = 64
-hidden_size = 32
+hidden_size = 16
 output_size = 2 #score a game state 
 num_layers = 2
 
@@ -69,17 +69,19 @@ def convert_char_to_num(char):
 
 @app.route('/evaluate', methods=['POST'])
 def evaluate():
-    data = request.json
-    board_state = data['board_state'] 
+    try:
+        data = request.json
+        board_state = data['board_state'] 
 
-    encoded_state = encode_board_state(board_state)
+        encoded_state = encode_board_state(board_state)
 
-    with torch.no_grad():
-        logits = model(encoded_state)
-        probabilities = softmax(logits.numpy(), axis=1)[0]  
+        with torch.no_grad():
+            logits = model(encoded_state)
+            probabilities = softmax(logits.cpu().numpy(), axis=1)[0]  
 
-    return jsonify({'winProbability': probabilities[1].item(), 'lossProbability': probabilities[0].item()})
-
+        return jsonify({'winProbability': probabilities[1].item(), 'lossProbability': probabilities[0].item()})
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 
 if __name__ == '__main__':

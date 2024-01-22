@@ -6,8 +6,8 @@ public class LSTMTest {
         LSTMModelClient client = new LSTMModelClient(); 
 
         // Example board state
-        //String boardState = "bbbbbb000bb0bbbb0w00000b0000b000000000b0000wwww0w000w0wwwwwwwww0";
-        String boardState = "bbbbbbbbbbbbbbbb00000000000000000000000000000000wwwwwwwwwwwwwwww";
+        String boardState = "bbbbbb000bb0bbbw0b00000b0000b000000000b0000wwww0w000w0wwwwwwwww0";
+        //String boardState = "bbbbbbbbbbbbbbbb00000000000000000000000000000000wwwwwwwwwwwwwwww";
         // Get the model prediction
         ModelPrediction boardEvaluation = client.getPrediction(boardState);
 

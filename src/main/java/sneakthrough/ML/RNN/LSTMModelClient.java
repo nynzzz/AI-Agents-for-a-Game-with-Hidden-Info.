@@ -21,14 +21,14 @@ public class LSTMModelClient {
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoOutput(true);
 
-            
+
             String jsonInputString = "{\"board_state\": \"" + boardState + "\"}";
             try (OutputStream os = conn.getOutputStream()) {
                 byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
 
-            // Handle the response
+            //handle the response
             try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
                 String responseLine;
@@ -46,7 +46,7 @@ public class LSTMModelClient {
         JSONObject jsonObject = new JSONObject(jsonResponse);
         double winProbability = jsonObject.getDouble("winProbability");
         double lossProbability = jsonObject.getDouble("lossProbability");
-    
+
         return new ModelPrediction(winProbability, lossProbability);
     }
     
