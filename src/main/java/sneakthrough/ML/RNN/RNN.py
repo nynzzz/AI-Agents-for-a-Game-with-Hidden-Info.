@@ -123,7 +123,7 @@ class LSTM(nn.Module):
         
         #forward pass through fully connected layer
         output = self.fc(last_output)
-        
+
         return output
     
 model = LSTM(input_size=input_size, hidden_size=hidden_size, output_size=output_size, num_layers=num_layers, dropout_p =0.3)
@@ -195,7 +195,7 @@ for epoch in range(num_epochs):
     if val_losses[-1] < best_val_loss:
         best_val_loss = val_losses[-1]
         patience_counter = 0 
-        torch.save(model.state_dict(), '/Users/nguyenhoanghai/Documents/GitHub/Project_2.1_06/src/main/resources/ML/LSTM/Rnn_checkpoint.pth')
+        #torch.save(model.state_dict(), '/Users/nguyenhoanghai/Documents/GitHub/Project_2.1_06/src/main/resources/ML/LSTM/Rnn_checkpoint.pth')
     else:
         patience_counter += 1
         if patience_counter > patience:
