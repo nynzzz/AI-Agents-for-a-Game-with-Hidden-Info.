@@ -73,7 +73,7 @@ plt.show()
 import pandas as pd
 import matplotlib.pyplot as plt
 # Read the CSV files
-df = pd.read_csv('ismctsExp/csv/ismcts1000VSminimax.csv')
+df = pd.read_csv('alpha_ismctsExp/formatted_a0_vs_ismcts.csv')
 
 # Plotting the data
 # Assuming 'winner' is the column that indicates the winner of the game
@@ -81,14 +81,14 @@ winner_counts = df.iloc[:, 1].value_counts()
 
 plt.figure(figsize=(8, 6))
 winner_counts.plot(kind='bar')
-plt.title('Distribution of Game Winners, ISMCTS vs Minimax')
+plt.title('Distribution of Game Winners, AlphaISMCTS vs ISMCTS')
 plt.xlabel('Winner')
 plt.ylabel('Number of Wins')
 plt.xticks(rotation=0)
 plt.show()
 #%%
 # Read the CSV files
-df = pd.read_csv('ismctsExp/csv/ismcts1000VSminimax.csv')
+df = pd.read_csv('alpha_ismctsExp/formatted_a0_vs_ismcts.csv')
 
 # Plotting the data
 # Assuming 'winner' is the column that indicates the winner of the game
@@ -96,7 +96,7 @@ winner_counts = df.iloc[:, 1].value_counts()
 # Plotting the data in a pie chart
 plt.figure(figsize=(8, 8))
 plt.pie(winner_counts, labels=winner_counts.index, autopct='%1.1f%%', startangle=140)
-plt.title('Distribution of Game Winners, ISMCTS vs Minimax')
+plt.title('Distribution of Game Winners, AlphaISMCTS vs ISMCTS')
 plt.show()
 #%%
 import pandas as pd

@@ -21,23 +21,23 @@ public class Game {
     public void startGame() {
         while (!isGameOver()) {
             if (turn) {
-                System.out.println("--------------------");
-                System.out.println("board state: " + board.printBoardtoStringFlattened());
-                System.out.println("player to move : w ");
+//                System.out.println("--------------------");
+//                System.out.println("board state: " + board.printBoardtoStringFlattened());
+//                System.out.println("player to move : w ");
 
                 player1.makeMove(board);
-//                System.out.println("--------------------");
-//                board.printBoard();
+                System.out.println("--------------------");
+                board.printBoard();
 
                 turn = false;
             } else {
-                System.out.println("--------------------");
-                System.out.println("board state: " + board.printBoardtoStringFlattened());
-                System.out.println("player to move : b ");
+//                System.out.println("--------------------");
+//                System.out.println("board state: " + board.printBoardtoStringFlattened());
+//                System.out.println("player to move : b ");
 
                 player2.makeMove(board);
-//                System.out.println("--------------------");
-//                board.printBoard();
+                System.out.println("--------------------");
+                board.printBoard();
                 turn = true;
             }
         }
@@ -100,9 +100,11 @@ public class Game {
         }
 
         if (isWhiteWinner()) {
-            return "ismcts";
+            System.out.println("a0");
+            return "Alpha_ismcts";
         } else if (isBlackWinner()) {
-            return "random";
+            System.out.println("ismcts");
+            return "ismcts";
         }
         return null;
     }
@@ -186,10 +188,11 @@ public class Game {
 //     main method to play the game in console
     public static void main(String[] args) {
         Board board = new Board();
-        Player player1 = new ISMCTSPlayer("white", 1000, 0.7);
+        Player player1 = new AlphaISMCTSPlayer("white", 100, 100);
 //        Player player2 = new ISMCTSPlayer("black", 1000);
-        Player player2 = new ISMCTSPlayer("black", 1000, 0.7);
+//        Player player2 = new ISMCTSPlayer("black", 1000, 0.7);
 //        Player player2 = new MiniMaxPlayer("black");
+        Player player2 = new RandomPlayer("black");
         Game game = new Game(board,player1, player2);
         game.startGame();
     }
