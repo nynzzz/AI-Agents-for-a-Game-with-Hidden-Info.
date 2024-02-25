@@ -1,4 +1,4 @@
-## Project_2.1_06
+## AI Agents for a Game with Hidden Information
 
 # Description:
 
